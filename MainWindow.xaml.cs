@@ -26,7 +26,8 @@ namespace circle_display
             InitializeComponent();
         }
 
-
+        double angle1 = 0.1013416985;
+        double angle2 = 0.098174770424681;
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -46,8 +47,8 @@ namespace circle_display
                 line.Stroke = new SolidColorBrush(Colors.Black);
                 line.X1 = 490;
                 line.Y1 = 490;
-                line.X2 = 490 + Math.Cos(j * 0.098174770424681) * 470;
-                line.Y2 = 490 + Math.Sin(-j * 0.098174770424681) * 470;
+                line.X2 = 490 + Math.Cos(j * angle1) * 470;
+                line.Y2 = 490 + Math.Sin(-j * angle1) * 470;
                 cnvsCircles.Children.Add(line);
             }
 
@@ -104,7 +105,7 @@ namespace circle_display
                 newLbl.VerticalAlignment = VerticalAlignment.Center;
 
                 PointF centerCirkel = new PointF(490, 490);
-                PointF endCirkel = new PointF((float)Convert.ToDecimal(490 + Math.Cos(l * 0.098174770424681 - 0.098174770424681 / 2)), (float)Convert.ToDecimal(490 + Math.Sin(-l * 0.098174770424681 - 0.098174770424681 / 2)));
+                PointF endCirkel = new PointF((float)Convert.ToDecimal(490 + Math.Cos(l * angle1)), (float)Convert.ToDecimal(490 + Math.Sin(-l * angle1)));
 
                 PointF coord1;
                 PointF coord2;
@@ -123,14 +124,14 @@ namespace circle_display
                 cirkelLabel.Width = cirkelLabel.Height = 20;
 
                 PointF centerCirkel = new PointF(490, 490);
-                PointF endCirkel = new PointF((float)Convert.ToDecimal(490 + Math.Cos(l * 0.098174770424681 - 0.098174770424681 / 2)), (float)Convert.ToDecimal(490 + Math.Sin(-l * 0.098174770424681 - 0.098174770424681 / 2)));
+                PointF endCirkel = new PointF((float)Convert.ToDecimal(490 + Math.Cos(l * angle1)), (float)Convert.ToDecimal(490 + Math.Sin(-l * angle1 )));
 
                 PointF coord1;
                 PointF coord2;
 
                 FindLineCircleIntersections(490, 490, 470, centerCirkel, endCirkel, out coord1, out coord2);
 
-                cirkelLabel.Margin = new Thickness(coord1.X, coord1.Y, 0, 0);
+                cirkelLabel.Margin = new Thickness(coord1.X - 10, coord1.Y - 10, 0, 0);
                 cnvsCircles.Children.Add(cirkelLabel);
             }
         }
