@@ -1,0 +1,25 @@
+C:\Users\aaron\Desktop\Bussiness project 2\Circle display for leds\circle display\bin\Debug\net6.0-windows\circle display.exe
+C:\Users\aaron\Desktop\Bussiness project 2\Circle display for leds\circle display\bin\Debug\net6.0-windows\circle display.deps.json
+C:\Users\aaron\Desktop\Bussiness project 2\Circle display for leds\circle display\bin\Debug\net6.0-windows\circle display.runtimeconfig.json
+C:\Users\aaron\Desktop\Bussiness project 2\Circle display for leds\circle display\bin\Debug\net6.0-windows\circle display.dll
+C:\Users\aaron\Desktop\Bussiness project 2\Circle display for leds\circle display\bin\Debug\net6.0-windows\circle display.pdb
+C:\Users\aaron\Desktop\Bussiness project 2\Circle display for leds\circle display\obj\Debug\net6.0-windows\circle display.csproj.AssemblyReference.cache
+C:\Users\aaron\Desktop\Bussiness project 2\Circle display for leds\circle display\obj\Debug\net6.0-windows\MainWindow.g.cs
+C:\Users\aaron\Desktop\Bussiness project 2\Circle display for leds\circle display\obj\Debug\net6.0-windows\App.g.cs
+C:\Users\aaron\Desktop\Bussiness project 2\Circle display for leds\circle display\obj\Debug\net6.0-windows\circle display_MarkupCompile.cache
+C:\Users\aaron\Desktop\Bussiness project 2\Circle display for leds\circle display\obj\Debug\net6.0-windows\circle display_MarkupCompile.lref
+C:\Users\aaron\Desktop\Bussiness project 2\Circle display for leds\circle display\obj\Debug\net6.0-windows\MainWindow.baml
+C:\Users\aaron\Desktop\Bussiness project 2\Circle display for leds\circle display\obj\Debug\net6.0-windows\circle display.g.resources
+C:\Users\aaron\Desktop\Bussiness project 2\Circle display for leds\circle display\obj\Debug\net6.0-windows\circle display.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\aaron\Desktop\Bussiness project 2\Circle display for leds\circle display\obj\Debug\net6.0-windows\circle display.AssemblyInfoInputs.cache
+C:\Users\aaron\Desktop\Bussiness project 2\Circle display for leds\circle display\obj\Debug\net6.0-windows\circle display.AssemblyInfo.cs
+C:\Users\aaron\Desktop\Bussiness project 2\Circle display for leds\circle display\obj\Debug\net6.0-windows\circle display.csproj.CoreCompileInputs.cache
+C:\Users\aaron\Desktop\Bussiness project 2\Circle display for leds\circle display\obj\Debug\net6.0-windows\circle display.dll
+C:\Users\aaron\Desktop\Bussiness project 2\Circle display for leds\circle display\obj\Debug\net6.0-windows\refint\circle display.dll
+C:\Users\aaron\Desktop\Bussiness project 2\Circle display for leds\circle display\obj\Debug\net6.0-windows\circle display.pdb
+C:\Users\aaron\Desktop\Bussiness project 2\Circle display for leds\circle display\obj\Debug\net6.0-windows\circle display.genruntimeconfig.cache
+C:\Users\aaron\Desktop\Bussiness project 2\Circle display for leds\circle display\obj\Debug\net6.0-windows\ref\circle display.dll
+C:\Users\aaron\Desktop\Bussiness project 2\Circle display for leds\circle display\bin\Debug\net6.0-windows\System.Windows.Forms.Ribbon35.dll
+C:\Users\aaron\Desktop\Bussiness project 2\Circle display for leds\circle display\obj\Debug\net6.0-windows\circle display.csproj.CopyComplete
+C:\Users\aaron\Desktop\Bussiness project 2\Circle display for leds\circle display\bin\Debug\net6.0-windows\Simplify.Resources.dll
+C:\Users\aaron\Desktop\Bussiness project 2\Circle display for leds\circle display\bin\Debug\net6.0-windows\Simplify.Windows.Forms.dll

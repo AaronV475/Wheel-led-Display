@@ -1,0 +1,190 @@
+{
+  "version": 3,
+  "targets": {
+    "net6.0-windows7.0": {
+      "Simplify.Resources/1.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/net5.0/Simplify.Resources.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net5.0/Simplify.Resources.dll": {
+            "related": ".xml"
+          }
+        }
+      },
+      "Simplify.Windows.Forms/1.1.2": {
+        "type": "package",
+        "dependencies": {
+          "Simplify.Resources": "1.0.2"
+        },
+        "compile": {
+          "lib/net5.0-windows7.0/Simplify.Windows.Forms.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net5.0-windows7.0/Simplify.Windows.Forms.dll": {
+            "related": ".xml"
+          }
+        },
+        "frameworkReferences": [
+          "Microsoft.WindowsDesktop.App.WindowsForms"
+        ]
+      },
+      "System.Windows.Forms.Ribbon35/3.5.8": {
+        "type": "package",
+        "compile": {
+          "lib/net35/System.Windows.Forms.Ribbon35.dll": {}
+        },
+        "runtime": {
+          "lib/net35/System.Windows.Forms.Ribbon35.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Simplify.Resources/1.0.2": {
+      "sha512": "qBvVxu03cQn/bLhM3cF12Zosec2sfM+nUeHla23iTz/UFJ/YE86o4YpUCfbY2j3d6C77MRxTYeoiHyyZ2f8GDg==",
+      "type": "package",
+      "path": "simplify.resources/1.0.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "CHANGELOG.md",
+        "icon.png",
+        "lib/net452/Simplify.Resources.dll",
+        "lib/net452/Simplify.Resources.xml",
+        "lib/net5.0/Simplify.Resources.dll",
+        "lib/net5.0/Simplify.Resources.xml",
+        "lib/netstandard2.0/Simplify.Resources.dll",
+        "lib/netstandard2.0/Simplify.Resources.xml",
+        "simplify.resources.1.0.2.nupkg.sha512",
+        "simplify.resources.nuspec"
+      ]
+    },
+    "Simplify.Windows.Forms/1.1.2": {
+      "sha512": "n0mPrLiuyWk544yOIeq1kaAHMolc2LP3NGh2KZj5zLrQnwWr6FfMrf6sk+r7YAfWkF/ga5CMoWm3Fhcr5fpQQw==",
+      "type": "package",
+      "path": "simplify.windows.forms/1.1.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "CHANGELOG.md",
+        "icon.png",
+        "lib/net452/Simplify.Windows.Forms.dll",
+        "lib/net452/Simplify.Windows.Forms.xml",
+        "lib/net5.0-windows7.0/Simplify.Windows.Forms.dll",
+        "lib/net5.0-windows7.0/Simplify.Windows.Forms.xml",
+        "lib/netcoreapp3.1/Simplify.Windows.Forms.dll",
+        "lib/netcoreapp3.1/Simplify.Windows.Forms.xml",
+        "simplify.windows.forms.1.1.2.nupkg.sha512",
+        "simplify.windows.forms.nuspec"
+      ]
+    },
+    "System.Windows.Forms.Ribbon35/3.5.8": {
+      "sha512": "eCT9IcJyU/NDrDA7Obp40Ata7hvPTVrtKjcofJe4LC/qjx7MNpOR0vNDfc5IDEzZi5bP5wGfJpVOWnnFeL2AUQ==",
+      "type": "package",
+      "path": "system.windows.forms.ribbon35/3.5.8",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "content/Updates.txt",
+        "lib/net35/System.Windows.Forms.Ribbon35.dll",
+        "system.windows.forms.ribbon35.3.5.8.nupkg.sha512",
+        "system.windows.forms.ribbon35.nuspec"
+      ]
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net6.0-windows7.0": [
+      "Simplify.Windows.Forms >= 1.1.2",
+      "System.Windows.Forms.Ribbon35 >= 3.5.8"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\aaron\\.nuget\\packages\\": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "C:\\Users\\aaron\\Desktop\\Bussiness project 2\\Circle display for leds\\circle display\\circle display.csproj",
+      "projectName": "circle display",
+      "projectPath": "C:\\Users\\aaron\\Desktop\\Bussiness project 2\\Circle display for leds\\circle display\\circle display.csproj",
+      "packagesPath": "C:\\Users\\aaron\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\aaron\\Desktop\\Bussiness project 2\\Circle display for leds\\circle display\\obj\\",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "C:\\Users\\aaron\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "net6.0-windows"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net6.0-windows7.0": {
+          "targetAlias": "net6.0-windows",
+          "projectReferences": {}
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "net6.0-windows7.0": {
+        "targetAlias": "net6.0-windows",
+        "dependencies": {
+          "Simplify.Windows.Forms": {
+            "target": "Package",
+            "version": "[1.1.2, )"
+          },
+          "System.Windows.Forms.Ribbon35": {
+            "target": "Package",
+            "version": "[3.5.8, )"
+          }
+        },
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48",
+          "net481"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          },
+          "Microsoft.WindowsDesktop.App.WPF": {
+            "privateAssets": "none"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.401\\RuntimeIdentifierGraph.json"
+      }
+    }
+  },
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Package 'System.Windows.Forms.Ribbon35 3.5.8' was restored using '.NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8, .NETFramework,Version=v4.8.1' instead of the project target framework 'net6.0-windows7.0'. This package may not be fully compatible with your project.",
+      "libraryId": "System.Windows.Forms.Ribbon35",
+      "targetGraphs": [
+        "net6.0-windows7.0"
+      ]
+    }
+  ]
+}

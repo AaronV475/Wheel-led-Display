@@ -1,0 +1,75 @@
+{
+  "runtimeTarget": {
+    "name": ".NETCoreApp,Version=v6.0",
+    "signature": ""
+  },
+  "compilationOptions": {},
+  "targets": {
+    ".NETCoreApp,Version=v6.0": {
+      "circle display/1.0.0": {
+        "dependencies": {
+          "Simplify.Windows.Forms": "1.1.2",
+          "System.Windows.Forms.Ribbon35": "3.5.8"
+        },
+        "runtime": {
+          "circle display.dll": {}
+        }
+      },
+      "Simplify.Resources/1.0.2": {
+        "runtime": {
+          "lib/net5.0/Simplify.Resources.dll": {
+            "assemblyVersion": "1.0.2.0",
+            "fileVersion": "1.0.2.0"
+          }
+        }
+      },
+      "Simplify.Windows.Forms/1.1.2": {
+        "dependencies": {
+          "Simplify.Resources": "1.0.2"
+        },
+        "runtime": {
+          "lib/net5.0-windows7.0/Simplify.Windows.Forms.dll": {
+            "assemblyVersion": "1.1.2.0",
+            "fileVersion": "1.1.2.0"
+          }
+        }
+      },
+      "System.Windows.Forms.Ribbon35/3.5.8": {
+        "runtime": {
+          "lib/net35/System.Windows.Forms.Ribbon35.dll": {
+            "assemblyVersion": "3.5.8.0",
+            "fileVersion": "3.5.8.0"
+          }
+        }
+      }
+    }
+  },
+  "libraries": {
+    "circle display/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "Simplify.Resources/1.0.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-qBvVxu03cQn/bLhM3cF12Zosec2sfM+nUeHla23iTz/UFJ/YE86o4YpUCfbY2j3d6C77MRxTYeoiHyyZ2f8GDg==",
+      "path": "simplify.resources/1.0.2",
+      "hashPath": "simplify.resources.1.0.2.nupkg.sha512"
+    },
+    "Simplify.Windows.Forms/1.1.2": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-n0mPrLiuyWk544yOIeq1kaAHMolc2LP3NGh2KZj5zLrQnwWr6FfMrf6sk+r7YAfWkF/ga5CMoWm3Fhcr5fpQQw==",
+      "path": "simplify.windows.forms/1.1.2",
+      "hashPath": "simplify.windows.forms.1.1.2.nupkg.sha512"
+    },
+    "System.Windows.Forms.Ribbon35/3.5.8": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-eCT9IcJyU/NDrDA7Obp40Ata7hvPTVrtKjcofJe4LC/qjx7MNpOR0vNDfc5IDEzZi5bP5wGfJpVOWnnFeL2AUQ==",
+      "path": "system.windows.forms.ribbon35/3.5.8",
+      "hashPath": "system.windows.forms.ribbon35.3.5.8.nupkg.sha512"
+    }
+  }
+}
