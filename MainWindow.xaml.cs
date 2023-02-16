@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -118,32 +119,44 @@ namespace circle_display
 
             for (int l = 0; l < 32; l++)
             {
-                Ellipse cirkelLabel = new Ellipse();
-                cirkelLabel.Stroke = new SolidColorBrush(Colors.Black);
-                cirkelLabel.Fill = new SolidColorBrush(System.Windows.Media.Color.FromRgb(Convert.ToByte(sldRed.Value), Convert.ToByte(sldGreen.Value), Convert.ToByte(sldBlue.Value)));
-                cirkelLabel.Width = cirkelLabel.Height = 20;
+                for (int i = 0; i < 16; i++) 
+                {
+                    Ellipse cirkelLabel = new Ellipse();
+                    cirkelLabel.Stroke = new SolidColorBrush(Colors.Black);
+                    cirkelLabel.Fill = new SolidColorBrush(System.Windows.Media.Color.FromRgb(Convert.ToByte(sldRed.Value), Convert.ToByte(sldGreen.Value), Convert.ToByte(sldBlue.Value)));
+                    cirkelLabel.Width = cirkelLabel.Height = 20;
+                    cirkelLabel.MouseDown += CirkelLabel_MouseDown;
+                    cirkelLabel.Tag = i.ToString() + ";" + l.ToString();
 
-                PointF centerCirkel = new PointF(490, 490);
-                PointF endCirkel = new PointF((float)Convert.ToDecimal(490 + Math.Cos(l * angle1)), (float)Convert.ToDecimal(490 + Math.Sin(-l * angle1 )));
+                    PointF centerCirkel = new PointF(490, 490);
+                    PointF endCirkel = new PointF((float)Convert.ToDecimal(490 + Math.Cos(l * angle1)), (float)Convert.ToDecimal(490 + Math.Sin(-l * angle1)));
 
-                PointF coord1;
-                PointF coord2;
+                    PointF coord1;
+                    PointF coord2;
 
-                FindLineCircleIntersections(490, 490, 470, centerCirkel, endCirkel, out coord1, out coord2);
+                    FindLineCircleIntersections(490, 490, 470 - i * 20, centerCirkel, endCirkel, out coord1, out coord2);
 
-                cirkelLabel.Margin = new Thickness(coord1.X - 10, coord1.Y - 10, 0, 0);
-                cnvsCircles.Children.Add(cirkelLabel);
+                    cirkelLabel.Margin = new Thickness(coord1.X - 10, coord1.Y - 10, 0, 0);
+                    cnvsCircles.Children.Add(cirkelLabel);
+                }
             }
+        }
+
+        private void CirkelLabel_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Ellipse temp = sender as Ellipse;
+
+            Debug.WriteLine(temp.Tag);
         }
 
         private void cnvsCircles_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            Ellipse leds = new Ellipse();
-            leds.Stroke = new SolidColorBrush(Colors.Black);
-            leds.Fill = new SolidColorBrush(System.Windows.Media.Color.FromRgb(Convert.ToByte(sldRed.Value), Convert.ToByte(sldGreen.Value), Convert.ToByte(sldBlue.Value)));
-            leds.Width = leds.Height = 20;
-            leds.Margin = new Thickness(Mouse.GetPosition(cnvsCircles).X - 10, Mouse.GetPosition(cnvsCircles).Y - 10, 0, 0);
-            cnvsCircles.Children.Add(leds);
+            //Ellipse leds = new Ellipse();
+            //leds.Stroke = new SolidColorBrush(Colors.Black);
+            //leds.Fill = new SolidColorBrush(System.Windows.Media.Color.FromRgb(Convert.ToByte(sldRed.Value), Convert.ToByte(sldGreen.Value), Convert.ToByte(sldBlue.Value)));
+            //leds.Width = leds.Height = 20;
+            //leds.Margin = new Thickness(Mouse.GetPosition(cnvsCircles).X - 10, Mouse.GetPosition(cnvsCircles).Y - 10, 0, 0);
+            //cnvsCircles.Children.Add(leds);
         }
 
 
