@@ -13,11 +13,16 @@
                     <Slider x:Name="sldRed" Maximum="255" TickFrequency="1" IsSnapToTickEnabled="True" AutoToolTipPlacement="TopLeft" Margin="0,10,0,0" Value="255"></Slider>
                     <Slider x:Name="sldGreen" Maximum="255" TickFrequency="1" IsSnapToTickEnabled="True" AutoToolTipPlacement="TopLeft" Margin="0,10,0,0" Value="255"></Slider>
                     <Slider x:Name="sldBlue" Maximum="255" TickFrequency="1" IsSnapToTickEnabled="True" AutoToolTipPlacement="TopLeft" Margin="0,10,0,0" Value="255"></Slider>
+                    <GroupBox Header="Preset Colours">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Button x:Name="btnRedPreset" Width="40" Height="30" Margin="5" Click="btnRedPreset_Click">Red</Button>
+                            <Button x:Name="btnWhitePreset" Width="40" Height="30" Margin="5" Click="btnWhitePreset_Click">White</Button>
+                        </StackPanel>
+                    </GroupBox>
                 </StackPanel>
             </GroupBox>
             <StackPanel>
-                <Canvas x:Name="cnvsCircles" Height="600" MouseLeftButtonDown="cnvsCircles_MouseLeftButtonDown" HorizontalAlignment="Left" VerticalAlignment="Top"></Canvas>
-                <Grid Name="grdButtons" Height="500" Width="1000" Margin="0,0,0,0" HorizontalAlignment="Left"></Grid>
+                <Canvas x:Name="cnvsCircles" Height="2000" MouseLeftButtonDown="cnvsCircles_MouseLeftButtonDown" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10"></Canvas>
             </StackPanel>
         </StackPanel>
     </ScrollViewer>

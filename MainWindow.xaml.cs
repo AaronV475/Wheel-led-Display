@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Runtime.ConstrainedExecution;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -14,6 +15,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Vives;
 
 namespace circle_display
 {
@@ -22,22 +24,26 @@ namespace circle_display
     /// </summary>
     public partial class MainWindow : Window
     {
+        double angle1 = 0.1013416985;
+        static int wheelCircle = 300;
+        static int ledDistance = 30; //This is a the distance between the leds in a row.
+        static int numberOfLeds = 16;
+        static int circleCenter = (wheelCircle + (ledDistance * 2) * (numberOfLeds + 1)) / 2;
         public MainWindow()
         {
             InitializeComponent();
         }
+        
 
-        double angle1 = 0.1013416985;
-        double angle2 = 0.098174770424681;
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            for (int i = 0; i < 17; i++)
+            for (int i = 1; i < 17; i++)
             {
                 Ellipse ellipse = new Ellipse();
-                ellipse.Width = ellipse.Height = 300 + i * 40;
+                ellipse.Width = ellipse.Height = wheelCircle + i * (ledDistance * 2);
                 ellipse.StrokeThickness = 2;
-                ellipse.Margin = new Thickness(20 * (17 - i), 20 * (17 - i), 0, 0);
+                ellipse.Margin = new Thickness(ledDistance * (17 - i), ledDistance * (17 - i), 0, 0);
                 ellipse.Stroke = new SolidColorBrush(Colors.Black);
                 cnvsCircles.Children.Add(ellipse);
             }
@@ -45,18 +51,18 @@ namespace circle_display
             for (int j = 0; j < 33; j++)
             {
                 Line line = new Line();
-                line.Stroke = new SolidColorBrush(Colors.Black);
-                line.X1 = 490;
-                line.Y1 = 490;
-                line.X2 = 490 + Math.Cos(j * angle1) * 470;
-                line.Y2 = 490 + Math.Sin(-j * angle1) * 470;
+                line.Stroke = new SolidColorBrush(Colors.White);
+                line.X1 = circleCenter;
+                line.Y1 = circleCenter;
+                line.X2 = circleCenter + Math.Cos(j * angle1) * (circleCenter - ledDistance);
+                line.Y2 = circleCenter + Math.Sin(-j * angle1) * (circleCenter - ledDistance);
                 cnvsCircles.Children.Add(line);
             }
 
             System.Windows.Shapes.Rectangle rectangle = new System.Windows.Shapes.Rectangle();
-            rectangle.Height = 500;
-            rectangle.Width = 1000;
-            rectangle.Margin = new Thickness(0, 490, 0, 0);
+            rectangle.Height = circleCenter;
+            rectangle.Width = circleCenter * 2;
+            rectangle.Margin = new Thickness(0, circleCenter, 0, 0);
             rectangle.Fill = new SolidColorBrush(Colors.White);
             cnvsCircles.Children.Add(rectangle);
 
@@ -66,10 +72,12 @@ namespace circle_display
                 {
                     System.Windows.Controls.CheckBox newChb = new CheckBox();
 
-                    newChb.Name = "chb" + i.ToString() + "_" + j.ToString();
+                    newChb.Tag = (15 - i).ToString() + "," + (j).ToString();
                     newChb.Height = newChb.Width = 30;
-                    newChb.Margin = new Thickness(j * 60 - 940, i * 60 - 600, 0, 0);
-                    grdButtons.Children.Add(newChb);
+                    newChb.Checked += NewChb_Checked;
+                    newChb.Unchecked += NewChb_Unchecked;
+                    newChb.Margin = new Thickness(j * 30 + 50 , i * 30 + circleCenter + 100, 0, 0);
+                    cnvsCircles.Children.Add(newChb);
                 }
 
             }
@@ -80,8 +88,8 @@ namespace circle_display
 
                 newLbl.Content = k.ToString();
                 newLbl.Height = newLbl.Width = 30;
-                newLbl.Margin = new Thickness(-1000, (15 - k) * 60 - 610, 0, 0);
-                grdButtons.Children.Add(newLbl);
+                newLbl.Margin = new Thickness( 20, (15 - k) * 30 + circleCenter + 95, 0, 0);
+                cnvsCircles.Children.Add(newLbl);
             }
 
             for (int l = 0; l < 32; l++)
@@ -90,8 +98,19 @@ namespace circle_display
 
                 newLbl.Content = l.ToString();
                 newLbl.Height = newLbl.Width = 30;
-                newLbl.Margin = new Thickness(l * 60 - 940, 350, 0, 0);
-                grdButtons.Children.Add(newLbl);
+                newLbl.HorizontalContentAlignment = HorizontalAlignment.Center;
+                newLbl.Margin = new Thickness(l * 30 + 43 , circleCenter + 90 + numberOfLeds * 30, 0, 0);
+                cnvsCircles.Children.Add(newLbl);
+            }
+
+            for (int l = 0; l < 16; l++)
+            {
+                System.Windows.Controls.Label newLbl = new Label();
+
+                newLbl.Content = l.ToString();
+                newLbl.Height = newLbl.Width = 30;
+                newLbl.Margin = new Thickness(l * ledDistance + 20 ,circleCenter + 10, 0, 0);
+                cnvsCircles.Children.Add(newLbl);
             }
 
             for (int l = 0; l < 32; l++)
@@ -100,41 +119,41 @@ namespace circle_display
 
                 newLbl.Content = (31 - l).ToString();
                 newLbl.Height = newLbl.Width = 30;
-                newLbl.HorizontalContentAlignment = HorizontalAlignment.Center;
-                newLbl.VerticalContentAlignment = VerticalAlignment.Center;
-                newLbl.HorizontalAlignment = HorizontalAlignment.Center;
-                newLbl.VerticalAlignment = VerticalAlignment.Center;
+                newLbl.HorizontalAlignment = HorizontalAlignment.Left;
+                newLbl.VerticalAlignment = VerticalAlignment.Top;
 
-                PointF centerCirkel = new PointF(490, 490);
-                PointF endCirkel = new PointF((float)Convert.ToDecimal(490 + Math.Cos(l * angle1)), (float)Convert.ToDecimal(490 + Math.Sin(-l * angle1)));
+                PointF centerCirkel = new PointF(circleCenter, circleCenter);
+                PointF endCirkel = new PointF((float)Convert.ToDecimal(circleCenter + Math.Cos(l * angle1)), (float)Convert.ToDecimal(circleCenter + Math.Sin(-l * angle1)));
 
                 PointF coord1;
                 PointF coord2;
 
-                FindLineCircleIntersections(490,490,980, centerCirkel, endCirkel, out coord1, out coord2);
+                FindLineCircleIntersections(circleCenter, circleCenter, circleCenter, centerCirkel, endCirkel, out coord1, out coord2);
 
-                newLbl.Margin = new Thickness(coord1.X - 500, coord1.Y - 1200, 0, 0);
-                grdButtons.Children.Add(newLbl);
+                newLbl.Margin = new Thickness(coord1.X - 10, coord1.Y - 15, 0, 0);
+                cnvsCircles.Children.Add(newLbl);
             }
 
+
+            // Tekent de bollen die de leds representateren op de snijpunten van de ellipsen met de rechten.
             for (int l = 0; l < 32; l++)
             {
                 for (int i = 0; i < 16; i++) 
                 {
                     Ellipse cirkelLabel = new Ellipse();
                     cirkelLabel.Stroke = new SolidColorBrush(Colors.Black);
-                    cirkelLabel.Fill = new SolidColorBrush(System.Windows.Media.Color.FromRgb(Convert.ToByte(sldRed.Value), Convert.ToByte(sldGreen.Value), Convert.ToByte(sldBlue.Value)));
+                    cirkelLabel.Fill = new SolidColorBrush(Colors.Black);
                     cirkelLabel.Width = cirkelLabel.Height = 20;
                     cirkelLabel.MouseDown += CirkelLabel_MouseDown;
-                    cirkelLabel.Tag = i.ToString() + ";" + l.ToString();
+                    cirkelLabel.Tag = (15 - i).ToString() + "," + (31 - l).ToString();
 
-                    PointF centerCirkel = new PointF(490, 490);
-                    PointF endCirkel = new PointF((float)Convert.ToDecimal(490 + Math.Cos(l * angle1)), (float)Convert.ToDecimal(490 + Math.Sin(-l * angle1)));
+                    PointF centerCirkel = new PointF(circleCenter, circleCenter);
+                    PointF endCirkel = new PointF((float)Convert.ToDecimal(circleCenter + Math.Cos(l * angle1)), (float)Convert.ToDecimal(circleCenter + Math.Sin(-l * angle1)));
 
                     PointF coord1;
                     PointF coord2;
 
-                    FindLineCircleIntersections(490, 490, 470 - i * 20, centerCirkel, endCirkel, out coord1, out coord2);
+                    FindLineCircleIntersections(circleCenter, circleCenter, (circleCenter - ledDistance) - i * ledDistance, centerCirkel, endCirkel, out coord1, out coord2);
 
                     cirkelLabel.Margin = new Thickness(coord1.X - 10, coord1.Y - 10, 0, 0);
                     cnvsCircles.Children.Add(cirkelLabel);
@@ -142,58 +161,69 @@ namespace circle_display
             }
         }
 
+        private void NewChb_Unchecked(object sender, RoutedEventArgs e)
+        {
+            CheckBox cb = sender as CheckBox;
+            Ellipse cirkelLabel = new Ellipse();
+            cirkelLabel.Stroke = new SolidColorBrush(Colors.Black);
+            cirkelLabel.Fill = new SolidColorBrush(Colors.Black);
+            cirkelLabel.Width = cirkelLabel.Height = 20;
+            string currentEllipse = (string)cb.Tag;
+            string[] coords = currentEllipse.Split(',');
+
+            PointF centerCirkel = new PointF(circleCenter, circleCenter);
+            PointF endCirkel = new PointF((float)Convert.ToDecimal(circleCenter + Math.Cos((Convert.ToDouble(coords[1]) - 31) * angle1)), (float)Convert.ToDecimal(circleCenter + Math.Sin(-1 * (Convert.ToDouble(coords[1])) * angle1)));
+
+            PointF coord1;
+            PointF coord2;
+
+            FindLineCircleIntersections(circleCenter, circleCenter, circleCenter - ledDistance - ((float)Convert.ToDecimal(coords[0])) * ledDistance, centerCirkel, endCirkel, out coord1, out coord2);
+            cirkelLabel.Margin = new Thickness(coord1.X - 10, coord1.Y - 10, 0, 0);
+            cnvsCircles.Children.Add(cirkelLabel);
+        }
+
+        private void NewChb_Checked(object sender, RoutedEventArgs e)
+        {
+            CheckBox cb = sender as CheckBox;
+            Ellipse cirkelLabel = new Ellipse();
+            cirkelLabel.Stroke = new SolidColorBrush(Colors.Black);
+            cirkelLabel.Fill = new SolidColorBrush(System.Windows.Media.Color.FromRgb(Convert.ToByte(sldRed.Value), Convert.ToByte(sldGreen.Value), Convert.ToByte(sldBlue.Value)));
+            cirkelLabel.Width = cirkelLabel.Height = 20;
+            string currentEllipse = (string)cb.Tag;
+            string[] coords = currentEllipse.Split(',');
+
+            PointF centerCirkel = new PointF(circleCenter, circleCenter);
+            PointF endCirkel = new PointF((float)Convert.ToDecimal(circleCenter + Math.Cos((Convert.ToDouble(coords[1]) - 31) * angle1)), (float)Convert.ToDecimal(circleCenter + Math.Sin(-1 * (Convert.ToDouble(coords[1])) * angle1)));
+
+            PointF coord1;
+            PointF coord2;
+
+            FindLineCircleIntersections(circleCenter, circleCenter, circleCenter - ledDistance - ((float)Convert.ToDecimal(coords[0])) * ledDistance, centerCirkel, endCirkel, out coord1, out coord2);
+            cirkelLabel.Margin = new Thickness(coord1.X - 10, coord1.Y - 10, 0, 0);
+            cnvsCircles.Children.Add(cirkelLabel);
+        }
+
         private void CirkelLabel_MouseDown(object sender, MouseButtonEventArgs e)
         {
             Ellipse temp = sender as Ellipse;
 
             Debug.WriteLine(temp.Tag);
+
+            string currentButton = "chb" + temp.Tag;            
         }
 
         private void cnvsCircles_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
         {
-            //Ellipse leds = new Ellipse();
-            //leds.Stroke = new SolidColorBrush(Colors.Black);
-            //leds.Fill = new SolidColorBrush(System.Windows.Media.Color.FromRgb(Convert.ToByte(sldRed.Value), Convert.ToByte(sldGreen.Value), Convert.ToByte(sldBlue.Value)));
-            //leds.Width = leds.Height = 20;
-            //leds.Margin = new Thickness(Mouse.GetPosition(cnvsCircles).X - 10, Mouse.GetPosition(cnvsCircles).Y - 10, 0, 0);
-            //cnvsCircles.Children.Add(leds);
+            
         }
 
-
-
-
-
-
-        public PointF ClosestIntersection(float cx, float cy, float radius,
-                                  PointF lineStart, PointF lineEnd)
-        {
-            PointF intersection1;
-            PointF intersection2;
-            int intersections = FindLineCircleIntersections(cx, cy, radius, lineStart, lineEnd, out intersection1, out intersection2);
-
-            if (intersections == 1)
-                return intersection1; // one intersection
-
-            if (intersections == 2)
-            {
-                double dist1 = Distance(intersection1, lineStart);
-                double dist2 = Distance(intersection2, lineStart);
-
-                if (dist1 < dist2)
-                    return intersection1;
-                else
-                    return intersection2;
-            }
-
-            return PointF.Empty; // no intersections at all
-        }
 
         private double Distance(PointF p1, PointF p2)
         {
             return Math.Sqrt(Math.Pow(p2.X - p1.X, 2) + Math.Pow(p2.Y - p1.Y, 2));
         }
 
-        // Find the points of intersection.
+        // Deze code berekend de snijpunten van de cirkel met de ellipsen.
         private int FindLineCircleIntersections(float cx, float cy, float radius,
                                                 PointF point1, PointF point2, 
                                                 out PointF intersection1, out PointF intersection2)
@@ -232,6 +262,20 @@ namespace circle_display
                 intersection2 = new PointF(point1.X + t * dx, point1.Y + t * dy);
                 return 2;
             }
+        }
+
+        private void btnRedPreset_Click(object sender, RoutedEventArgs e)
+        {
+            sldRed.Value = 255;
+            sldGreen.Value = 0;
+            sldBlue.Value = 0;
+        }
+
+        private void btnWhitePreset_Click(object sender, RoutedEventArgs e)
+        {
+            sldRed.Value = 255;
+            sldGreen.Value = 255;
+            sldBlue.Value = 255;
         }
     }
 }
