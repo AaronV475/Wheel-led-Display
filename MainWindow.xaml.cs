@@ -24,39 +24,31 @@ namespace circle_display
     /// </summary>
     public partial class MainWindow : Window
     {
-        double angle1 = 0.1013416985;
-        static int wheelCircle = 300;
-        static int ledDistance = 30; //This is a the distance between the leds in a row.
-        static int numberOfLeds = 16;
-        static int circleCenter = (wheelCircle + (ledDistance * 2) * (numberOfLeds + 1)) / 2;
+        public static double angle1 = 0.1013416985; // Hoek tussen de segmenten in radialen. (Moet nog in formule verwerkt worden.)
+
+        static int wheelCircle = 350; // Diameter van de kleinste cirkel van het wiel.
+        public static int ledDistance = 25; // This is a the distance between the leds in a row.
+
+        static int numberOfLeds = 16; // Aantal leds per rij / lengte van de ledstrip.
+        static int numberOfSegments = 32; // Aantal segmenten waarin het halve of hele wiel is ingedeeld.
+
+        public static int circleCenter = (wheelCircle + (ledDistance * 2) * (numberOfLeds + 1)) / 2; // Y-locatie van het centrum van het wiel.
         public MainWindow()
         {
             InitializeComponent();
         }
         
-
-
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            for (int i = 1; i < 17; i++)
+            for (int i = 0; i < 16; i++)
             {
+                // Tekent de cirkels van het wiel
                 Ellipse ellipse = new Ellipse();
-                ellipse.Width = ellipse.Height = wheelCircle + i * (ledDistance * 2);
-                ellipse.StrokeThickness = 2;
-                ellipse.Margin = new Thickness(ledDistance * (17 - i), ledDistance * (17 - i), 0, 0);
-                ellipse.Stroke = new SolidColorBrush(Colors.Black);
+                ellipse.Width = ellipse.Height = wheelCircle + i * (ledDistance * 2) + ledDistance * 2;
+                ellipse.StrokeThickness = 1;
+                ellipse.Margin = new Thickness(ledDistance * (16 - i), ledDistance * (16 - i), 0, 0);
+                ellipse.Stroke = new SolidColorBrush(Colors.Gray);
                 cnvsCircles.Children.Add(ellipse);
-            }
-
-            for (int j = 0; j < 33; j++)
-            {
-                Line line = new Line();
-                line.Stroke = new SolidColorBrush(Colors.White);
-                line.X1 = circleCenter;
-                line.Y1 = circleCenter;
-                line.X2 = circleCenter + Math.Cos(j * angle1) * (circleCenter - ledDistance);
-                line.Y2 = circleCenter + Math.Sin(-j * angle1) * (circleCenter - ledDistance);
-                cnvsCircles.Children.Add(line);
             }
 
             System.Windows.Shapes.Rectangle rectangle = new System.Windows.Shapes.Rectangle();
@@ -82,40 +74,46 @@ namespace circle_display
 
             }
 
-            for (int k = 0; k < 16; k++)
+            for (int i = 0; i < 16; i++)
             {
-                System.Windows.Controls.Label newLbl = new Label();
+                // Zet de labels bij de checkboxen met het aantal rijen aangeduid
+                Label labelChbRow = new Label();
+                labelChbRow.Content = i.ToString();
+                labelChbRow.Height = labelChbRow.Width = 30;
+                labelChbRow.Margin = new Thickness(20, (15 - i) * 30 + circleCenter + 95, 0, 0);
+                cnvsCircles.Children.Add(labelChbRow);
 
-                newLbl.Content = k.ToString();
-                newLbl.Height = newLbl.Width = 30;
-                newLbl.Margin = new Thickness( 20, (15 - k) * 30 + circleCenter + 95, 0, 0);
-                cnvsCircles.Children.Add(newLbl);
+                // Zet de labels bij de cirkels met het aantal rijen aangeduid
+                Label labelCrkRow = new Label();
+                labelCrkRow.Content = i.ToString();
+                labelCrkRow.Height = labelCrkRow.Width = 30;
+                labelCrkRow.Margin = new Thickness(i * ledDistance + 20, circleCenter + 10, 0, 0);
+                cnvsCircles.Children.Add(labelCrkRow);
             }
 
-            for (int l = 0; l < 32; l++)
+            for (int j = 0; j < 32; j++)
             {
-                System.Windows.Controls.Label newLbl = new Label();
+                // Tekent de lijnen die de segmenten verdelen
+                Line line = new Line();
+                line.Stroke = new SolidColorBrush(Colors.Gray);
+                line.X1 = circleCenter;
+                line.Y1 = circleCenter;
+                line.X2 = circleCenter + Math.Cos(j * angle1) * (circleCenter - ledDistance);
+                line.Y2 = circleCenter + Math.Sin(-j * angle1) * (circleCenter - ledDistance);
+                cnvsCircles.Children.Add(line);
 
-                newLbl.Content = l.ToString();
+                // Tekent de labels bij de checkboxen met het aantal kolommen aangeduid
+                Label newLbl = new Label();
+                newLbl.Content = j.ToString();
                 newLbl.Height = newLbl.Width = 30;
                 newLbl.HorizontalContentAlignment = HorizontalAlignment.Center;
-                newLbl.Margin = new Thickness(l * 30 + 43 , circleCenter + 90 + numberOfLeds * 30, 0, 0);
-                cnvsCircles.Children.Add(newLbl);
-            }
-
-            for (int l = 0; l < 16; l++)
-            {
-                System.Windows.Controls.Label newLbl = new Label();
-
-                newLbl.Content = l.ToString();
-                newLbl.Height = newLbl.Width = 30;
-                newLbl.Margin = new Thickness(l * ledDistance + 20 ,circleCenter + 10, 0, 0);
+                newLbl.Margin = new Thickness(j * 30 + 43, circleCenter + 90 + numberOfLeds * 30, 0, 0);
                 cnvsCircles.Children.Add(newLbl);
             }
 
             for (int l = 0; l < 32; l++)
             {
-                System.Windows.Controls.Label newLbl = new Label();
+                Label newLbl = new Label();
 
                 newLbl.Content = (31 - l).ToString();
                 newLbl.Height = newLbl.Width = 30;
@@ -128,7 +126,7 @@ namespace circle_display
                 PointF coord1;
                 PointF coord2;
 
-                FindLineCircleIntersections(circleCenter, circleCenter, circleCenter, centerCirkel, endCirkel, out coord1, out coord2);
+                Calculations.FindLineCircleIntersections(circleCenter, circleCenter, circleCenter, centerCirkel, endCirkel, out coord1, out coord2);
 
                 newLbl.Margin = new Thickness(coord1.X - 10, coord1.Y - 15, 0, 0);
                 cnvsCircles.Children.Add(newLbl);
@@ -153,7 +151,7 @@ namespace circle_display
                     PointF coord1;
                     PointF coord2;
 
-                    FindLineCircleIntersections(circleCenter, circleCenter, (circleCenter - ledDistance) - i * ledDistance, centerCirkel, endCirkel, out coord1, out coord2);
+                    Calculations.FindLineCircleIntersections(circleCenter, circleCenter, (circleCenter - ledDistance) - i * ledDistance, centerCirkel, endCirkel, out coord1, out coord2);
 
                     cirkelLabel.Margin = new Thickness(coord1.X - 10, coord1.Y - 10, 0, 0);
                     cnvsCircles.Children.Add(cirkelLabel);
@@ -166,10 +164,13 @@ namespace circle_display
             CheckBox cb = sender as CheckBox;
             Ellipse cirkelLabel = new Ellipse();
             cirkelLabel.Stroke = new SolidColorBrush(Colors.Black);
+            cirkelLabel.StrokeThickness = 1;
             cirkelLabel.Fill = new SolidColorBrush(Colors.Black);
             cirkelLabel.Width = cirkelLabel.Height = 20;
             string currentEllipse = (string)cb.Tag;
             string[] coords = currentEllipse.Split(',');
+            cirkelLabel.Tag = cb.Tag;
+            cirkelLabel.MouseDown += CirkelLabel_MouseDown;
 
             PointF centerCirkel = new PointF(circleCenter, circleCenter);
             PointF endCirkel = new PointF((float)Convert.ToDecimal(circleCenter + Math.Cos((Convert.ToDouble(coords[1]) - 31) * angle1)), (float)Convert.ToDecimal(circleCenter + Math.Sin(-1 * (Convert.ToDouble(coords[1])) * angle1)));
@@ -177,7 +178,7 @@ namespace circle_display
             PointF coord1;
             PointF coord2;
 
-            FindLineCircleIntersections(circleCenter, circleCenter, circleCenter - ledDistance - ((float)Convert.ToDecimal(coords[0])) * ledDistance, centerCirkel, endCirkel, out coord1, out coord2);
+            Calculations.FindLineCircleIntersections(circleCenter, circleCenter, circleCenter - ledDistance - ((float)Convert.ToDecimal(coords[0])) * ledDistance, centerCirkel, endCirkel, out coord1, out coord2);
             cirkelLabel.Margin = new Thickness(coord1.X - 10, coord1.Y - 10, 0, 0);
             cnvsCircles.Children.Add(cirkelLabel);
         }
@@ -186,11 +187,15 @@ namespace circle_display
         {
             CheckBox cb = sender as CheckBox;
             Ellipse cirkelLabel = new Ellipse();
+            SolidColorBrush ledFill = new SolidColorBrush(System.Windows.Media.Color.FromRgb(Convert.ToByte(sldRed.Value), Convert.ToByte(sldGreen.Value), Convert.ToByte(sldBlue.Value)));
+            cirkelLabel.Fill = ledFill;
+            cirkelLabel.StrokeThickness = 1;
             cirkelLabel.Stroke = new SolidColorBrush(Colors.Black);
-            cirkelLabel.Fill = new SolidColorBrush(System.Windows.Media.Color.FromRgb(Convert.ToByte(sldRed.Value), Convert.ToByte(sldGreen.Value), Convert.ToByte(sldBlue.Value)));
             cirkelLabel.Width = cirkelLabel.Height = 20;
             string currentEllipse = (string)cb.Tag;
             string[] coords = currentEllipse.Split(',');
+            cirkelLabel.Tag = cb.Tag;
+            cirkelLabel.MouseDown += CirkelLabel_MouseDown;
 
             PointF centerCirkel = new PointF(circleCenter, circleCenter);
             PointF endCirkel = new PointF((float)Convert.ToDecimal(circleCenter + Math.Cos((Convert.ToDouble(coords[1]) - 31) * angle1)), (float)Convert.ToDecimal(circleCenter + Math.Sin(-1 * (Convert.ToDouble(coords[1])) * angle1)));
@@ -198,8 +203,9 @@ namespace circle_display
             PointF coord1;
             PointF coord2;
 
-            FindLineCircleIntersections(circleCenter, circleCenter, circleCenter - ledDistance - ((float)Convert.ToDecimal(coords[0])) * ledDistance, centerCirkel, endCirkel, out coord1, out coord2);
+            Calculations.FindLineCircleIntersections(circleCenter, circleCenter, circleCenter - ledDistance - ((float)Convert.ToDecimal(coords[0])) * ledDistance, centerCirkel, endCirkel, out coord1, out coord2);
             cirkelLabel.Margin = new Thickness(coord1.X - 10, coord1.Y - 10, 0, 0);
+
             cnvsCircles.Children.Add(cirkelLabel);
         }
 
@@ -210,58 +216,6 @@ namespace circle_display
             Debug.WriteLine(temp.Tag);
 
             string currentButton = "chb" + temp.Tag;            
-        }
-
-        private void cnvsCircles_MouseLeftButtonDown(object sender, MouseButtonEventArgs e)
-        {
-            
-        }
-
-
-        private double Distance(PointF p1, PointF p2)
-        {
-            return Math.Sqrt(Math.Pow(p2.X - p1.X, 2) + Math.Pow(p2.Y - p1.Y, 2));
-        }
-
-        // Deze code berekend de snijpunten van de cirkel met de ellipsen.
-        private int FindLineCircleIntersections(float cx, float cy, float radius,
-                                                PointF point1, PointF point2, 
-                                                out PointF intersection1, out PointF intersection2)
-        {
-            float dx, dy, A, B, C, det, t;
-
-            dx = point2.X - point1.X;
-            dy = point2.Y - point1.Y;
-
-            A = dx * dx + dy * dy;
-            B = 2 * (dx * (point1.X - cx) + dy * (point1.Y - cy));
-            C = (point1.X - cx) * (point1.X - cx) + (point1.Y - cy) * (point1.Y - cy) - radius * radius;
-
-            det = B * B - 4 * A * C;
-            if ((A <= 0.0000001) || (det < 0))
-            {
-                // No real solutions.
-                intersection1 = new PointF(float.NaN, float.NaN);
-                intersection2 = new PointF(float.NaN, float.NaN);
-                return 0;
-            }
-            else if (det == 0)
-            {
-                // One solution.
-                t = -B / (2 * A);
-                intersection1 = new PointF(point1.X + t * dx, point1.Y + t * dy);
-                intersection2 = new PointF(float.NaN, float.NaN);
-                return 1;
-            }
-            else
-            {
-                // Two solutions.
-                t = (float)((-B + Math.Sqrt(det)) / (2 * A));
-                intersection1 = new PointF(point1.X + t * dx, point1.Y + t * dy);
-                t = (float)((-B - Math.Sqrt(det)) / (2 * A));
-                intersection2 = new PointF(point1.X + t * dx, point1.Y + t * dy);
-                return 2;
-            }
         }
 
         private void btnRedPreset_Click(object sender, RoutedEventArgs e)
