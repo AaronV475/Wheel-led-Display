@@ -23,3 +23,4 @@ C:\Users\aaron\Desktop\Bussiness project 2\Circle display for leds\circle displa
 C:\Users\aaron\Desktop\Bussiness project 2\Circle display for leds\circle display\obj\Debug\net6.0-windows\circle display.csproj.CopyComplete
 C:\Users\aaron\Desktop\Bussiness project 2\Circle display for leds\circle display\bin\Debug\net6.0-windows\Simplify.Resources.dll
 C:\Users\aaron\Desktop\Bussiness project 2\Circle display for leds\circle display\bin\Debug\net6.0-windows\Simplify.Windows.Forms.dll
+C:\Users\aaron\Desktop\Bussiness project 2\Circle display for leds\circle display\obj\Debug\net6.0-windows\App.baml
