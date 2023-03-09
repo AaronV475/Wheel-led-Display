@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Runtime.ConstrainedExecution;
@@ -51,7 +52,9 @@ namespace circle_display
 
         APA102C[,] DataByte = new APA102C[32, 16];
 
-
+        List<CheckBox> checkList = new List<CheckBox>();
+        List<Ellipse> ellipseList = new List<Ellipse>();
+        
         public MainWindow()
         {
             InitializeComponent();
@@ -59,7 +62,7 @@ namespace circle_display
         
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
-            for (int i = 0; i < 16; i++)
+            for (int i = 0; i < numberOfLeds; i++)
             {
                 // Tekent de cirkels van het wiel
                 Ellipse ellipse = new Ellipse();
@@ -78,7 +81,7 @@ namespace circle_display
 
             
 
-            for (int i = 0; i < 16; i++)
+            for (int i = 0; i < numberOfLeds; i++)
             {
                 // Zet de labels bij de checkboxen met het aantal rijen aangeduid
                 Label labelChbRow = new Label();
@@ -96,7 +99,7 @@ namespace circle_display
                 cnvsCircles.Children.Add(labelCrkRow);
             }
 
-            for (int j = 0; j < 32; j++)
+            for (int j = 0; j < numberOfSegments; j++)
             {
                 // Tekent de lijnen die de segmenten verdelen
                 Line line = new Line();
@@ -132,17 +135,18 @@ namespace circle_display
                 cnvsCircles.Children.Add(lblCirkel);
             }
 
-            for (int j = 0; j < 32; j++)
+            for (int j = 0; j < numberOfSegments; j++)
             {
-                for (int i = 0; i < 16; i++)
+                for (int i = 0; i < numberOfLeds; i++)
                 {
                     // Tekent de checkboxen die de data array moeten voorstellen
                     System.Windows.Controls.CheckBox newChb = new CheckBox();
 
-                    newChb.Tag = (j).ToString() + "," + (15 -i).ToString();
+                    newChb.Tag = (j).ToString() + "," + (i).ToString();
                     newChb.Checked += NewChb_Checked;
                     newChb.Unchecked += NewChb_Unchecked;
                     newChb.Margin = new Thickness(j * 30 + 50, i * 30 + circleCenter + 100, 0, 0);
+                    checkList.Add(newChb);
                     cnvsCircles.Children.Add(newChb);
 
                     // Tekent de bollen die de leds representateren op de snijpunten van de ellipsen met de rechten.
@@ -163,7 +167,7 @@ namespace circle_display
 
         private void NewChb_Unchecked(object sender, RoutedEventArgs e)
         {
-            CheckBox cb = sender as CheckBox;
+            CheckBox? cb = sender as CheckBox;
             Ellipse cirkelLabel = new Ellipse();
             cirkelLabel.Fill = new SolidColorBrush(Colors.Black);
             string currentEllipse = (string)cb.Tag;
@@ -186,7 +190,7 @@ namespace circle_display
 
         private void NewChb_Checked(object sender, RoutedEventArgs e)
         {
-            CheckBox cb = sender as CheckBox;
+            CheckBox? cb = sender as CheckBox;
             Ellipse cirkelLabel = new Ellipse();
             SolidColorBrush ledFill = new SolidColorBrush(System.Windows.Media.Color.FromRgb(Convert.ToByte(sldRed.Value), Convert.ToByte(sldGreen.Value), Convert.ToByte(sldBlue.Value)));
             cirkelLabel.Fill = ledFill;
@@ -202,7 +206,6 @@ namespace circle_display
 
             cnvsCircles.Children.Add(cirkelLabel);
 
-
             DataByte[Convert.ToInt16(coords[0]), Convert.ToInt16(coords[1])].brightness = sldIntensity.Value;
             DataByte[Convert.ToInt16(coords[0]), Convert.ToInt16(coords[1])].red = sldRed.Value;
             DataByte[Convert.ToInt16(coords[0]), Convert.ToInt16(coords[1])].green = sldGreen.Value;
@@ -212,7 +215,7 @@ namespace circle_display
 
         private void CirkelLabel_MouseDown(object sender, MouseButtonEventArgs e)
         {
-            Ellipse temp = sender as Ellipse;
+            Ellipse? temp = sender as Ellipse;
 
             Debug.WriteLine(temp.Tag);
 
@@ -235,7 +238,7 @@ namespace circle_display
 
         private void btnExport_Click(object sender, RoutedEventArgs e)
         {
-            using (StreamWriter writeData = new StreamWriter("SendData.txt"))
+            using StreamWriter writeData = new StreamWriter("SendData.txt");
             
             for (int i = 0; i < 32; i++)
             {
@@ -244,7 +247,29 @@ namespace circle_display
                     writeData.Write($"{Convert.ToString(DataByte[i, j].brightness)},{Convert.ToString(DataByte[i, j].red)},{Convert.ToString(DataByte[i, j].green)},{Convert.ToString(DataByte[i, j].blue)},");
                 }
             }
-            
+        }
+
+        private void btnImport_Click(object sender, RoutedEventArgs e)
+        {
+            APA102C[,] importAPA102C = new APA102C[32,16];
+            string importData = System.IO.File.ReadAllText(@"C:\\Users\\aaron\\Desktop\\Bussiness project 2\\Circle display for leds\\circle display\\bin\\Debug\\net6.0-windows\SendData.txt");
+            string[] importArray = importData.Split(",");
+            for (int i = 0; i < numberOfSegments; i++)
+            {
+                for (int j = 0; j < numberOfLeds; j++)
+                {
+                    importAPA102C[i, j].brightness = Convert.ToDouble(importArray[64 * i + 4 * j]);
+                    importAPA102C[i, j].red = Convert.ToDouble(importArray[64 * i + 4 * j + 1]);
+                    importAPA102C[i, j].green = Convert.ToDouble(importArray[64 * i + 4 * j + 2]);
+                    importAPA102C[i, j].blue = Convert.ToDouble(importArray[64 * i + 4 * j + 3]);
+
+                    if (importAPA102C[i,j].brightness != 0)
+                    {
+                        CheckBox setCheck = checkList[16 * i + j];
+                        setCheck.IsChecked = true;
+                    }
+                }
+            }
         }
     }
 }
