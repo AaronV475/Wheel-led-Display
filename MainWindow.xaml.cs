@@ -146,13 +146,14 @@ namespace circle_display
                     newChb.Checked += NewChb_Checked;
                     newChb.Unchecked += NewChb_Unchecked;
                     newChb.Margin = new Thickness(j * 30 + 50, i * 30 + circleCenter + 100, 0, 0);
+
                     checkList.Add(newChb);
                     cnvsCircles.Children.Add(newChb);
 
                     // Tekent de bollen die de leds representateren op de snijpunten van de ellipsen met de rechten.
                     Ellipse cirkelLabel = new Ellipse();
                     cirkelLabel.Fill = new SolidColorBrush(Colors.Black);
-                    cirkelLabel.MouseDown += CirkelLabel_MouseDown;
+                    //cirkelLabel.MouseDown += CirkelLabel_MouseDown;
                     cirkelLabel.Tag = j.ToString() + "," + (15 -i).ToString();
 
                     endCirkel = new PointF((float)Convert.ToDecimal(circleCenter - Math.Cos(j * angle1)), (float)Convert.ToDecimal(circleCenter + Math.Sin(-j * angle1)));
@@ -160,6 +161,8 @@ namespace circle_display
                     Calculations.FindLineCircleIntersections(circleCenter, circleCenter, (circleCenter - ledDistance) - i * ledDistance, centerCirkel, endCirkel, out coord1, out coord2);
 
                     cirkelLabel.Margin = new Thickness(coord1.X - 10, coord1.Y - 10, 0, 0);
+
+                    ellipseList.Add(cirkelLabel);
                     cnvsCircles.Children.Add(cirkelLabel);
                 }
             }
@@ -168,18 +171,25 @@ namespace circle_display
         private void NewChb_Unchecked(object sender, RoutedEventArgs e)
         {
             CheckBox? cb = sender as CheckBox;
-            Ellipse cirkelLabel = new Ellipse();
-            cirkelLabel.Fill = new SolidColorBrush(Colors.Black);
+
             string currentEllipse = (string)cb.Tag;
             string[] coords = currentEllipse.Split(',');
-            cirkelLabel.Tag = cb.Tag;
-            cirkelLabel.MouseDown += CirkelLabel_MouseDown;
+
+            Ellipse ellipseChange = ellipseList[16 * Convert.ToInt32(coords[0]) + Convert.ToInt32(coords[1])];
+
+            ellipseChange.Fill = new SolidColorBrush(Colors.Black);
+            
+            ellipseChange.Tag = cb.Tag;
+            //cirkelLabel.MouseDown += CirkelLabel_MouseDown;
 
             endCirkel = new PointF((float)Convert.ToDecimal(circleCenter - Math.Cos((Convert.ToDouble(coords[0])) * angle1)), (float)Convert.ToDecimal(circleCenter + Math.Sin(-1 * (Convert.ToDouble(coords[0])) * angle1)));
 
             Calculations.FindLineCircleIntersections(circleCenter, circleCenter, circleCenter - ledDistance - ((float)Convert.ToDecimal(coords[1])) * ledDistance, centerCirkel, endCirkel, out coord1, out coord2);
-            cirkelLabel.Margin = new Thickness(coord1.X - 10, coord1.Y - 10, 0, 0);
-            cnvsCircles.Children.Add(cirkelLabel);
+            
+            ellipseChange.Margin = new Thickness(coord1.X - 10, coord1.Y - 10, 0, 0);
+
+            cnvsCircles.Children.Remove(ellipseChange);
+            cnvsCircles.Children.Add(ellipseChange);
 
             DataByte[Convert.ToInt16(coords[0]), Convert.ToInt16(coords[1])].brightness = 0;
             DataByte[Convert.ToInt16(coords[0]), Convert.ToInt16(coords[1])].red = 0;
@@ -191,20 +201,25 @@ namespace circle_display
         private void NewChb_Checked(object sender, RoutedEventArgs e)
         {
             CheckBox? cb = sender as CheckBox;
-            Ellipse cirkelLabel = new Ellipse();
             SolidColorBrush ledFill = new SolidColorBrush(System.Windows.Media.Color.FromRgb(Convert.ToByte(sldRed.Value), Convert.ToByte(sldGreen.Value), Convert.ToByte(sldBlue.Value)));
-            cirkelLabel.Fill = ledFill;
+
             string currentEllipse = (string)cb.Tag;
             string[] coords = currentEllipse.Split(',');
-            cirkelLabel.Tag = cb.Tag;
-            cirkelLabel.MouseDown += CirkelLabel_MouseDown;
+
+            Ellipse ellipseChange = ellipseList[16 * Convert.ToInt32(coords[0]) + Convert.ToInt32(coords[1])];
+            
+            ellipseChange.Fill = ledFill;
+            
+            ellipseChange.Tag = cb.Tag;
+            //cirkelLabel.MouseDown += CirkelLabel_MouseDown;
 
             endCirkel = new PointF((float)Convert.ToDecimal(circleCenter - Math.Cos((Convert.ToDouble(coords[0])) * angle1)), (float)Convert.ToDecimal(circleCenter + Math.Sin(-1 * (Convert.ToDouble(coords[0])) * angle1)));
 
             Calculations.FindLineCircleIntersections(circleCenter, circleCenter, circleCenter - ledDistance - ((float)Convert.ToDecimal(coords[1])) * ledDistance, centerCirkel, endCirkel, out coord1, out coord2);
-            cirkelLabel.Margin = new Thickness(coord1.X - 10, coord1.Y - 10, 0, 0);
+            ellipseChange.Margin = new Thickness(coord1.X - 10, coord1.Y - 10, 0, 0);
 
-            cnvsCircles.Children.Add(cirkelLabel);
+            cnvsCircles.Children.Remove(ellipseChange);
+            cnvsCircles.Children.Add(ellipseChange);
 
             DataByte[Convert.ToInt16(coords[0]), Convert.ToInt16(coords[1])].brightness = sldIntensity.Value;
             DataByte[Convert.ToInt16(coords[0]), Convert.ToInt16(coords[1])].red = sldRed.Value;
@@ -213,14 +228,14 @@ namespace circle_display
             
         }
 
-        private void CirkelLabel_MouseDown(object sender, MouseButtonEventArgs e)
-        {
-            Ellipse? temp = sender as Ellipse;
+        //private void CirkelLabel_MouseDown(object sender, MouseButtonEventArgs e)
+        //{
+        //    Ellipse? temp = sender as Ellipse;
 
-            Debug.WriteLine(temp.Tag);
+        //    Debug.WriteLine(temp.Tag);
 
-            string currentButton = "chb" + temp.Tag;            
-        }
+        //    string currentButton = "chb" + temp.Tag;            
+        //}
 
         private void btnRedPreset_Click(object sender, RoutedEventArgs e)
         {
@@ -266,10 +281,20 @@ namespace circle_display
                     if (importAPA102C[i,j].brightness != 0)
                     {
                         CheckBox setCheck = checkList[16 * i + j];
+                        
+                        sldRed.Value = importAPA102C[i, j].red;
+                        sldGreen.Value = importAPA102C[i, j].green;
+                        sldBlue.Value = importAPA102C[i, j].blue;
+
                         setCheck.IsChecked = true;
                     }
                 }
             }
+        }
+
+        private void btnReset_Click(object sender, RoutedEventArgs e)
+        {
+
         }
     }
 }

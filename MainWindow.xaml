@@ -34,10 +34,10 @@
                     </GroupBox>
                     <Button x:Name="btnExport" Width="80" Height="30" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Top" Click="btnExport_Click" >Export</Button>
                     <Button x:Name="btnImport" Width="80" Height="30" Margin="5" HorizontalAlignment="Center" VerticalAlignment="Top" Click="btnImport_Click" >Import</Button>
-                    <TextBox x:Name="testdata" Height="200" xml:space="preserve"></TextBox>
+                    <Button x:Name="btnReset" Width="80" Height="30" Margin="0,25,0,10" HorizontalAlignment="Center" VerticalAlignment="Top" Click="btnReset_Click" >Reset</Button>
                 </StackPanel>
             </GroupBox>
-            <Canvas x:Name="cnvsCircles" Height="2000" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10"></Canvas>
+            <Canvas x:Name="cnvsCircles" Height="1300" HorizontalAlignment="Left" VerticalAlignment="Top" Margin="10"></Canvas>
         </StackPanel>
     </ScrollViewer>
 </Window>
