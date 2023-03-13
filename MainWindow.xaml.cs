@@ -17,7 +17,6 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
-using Vives;
 
 namespace circle_display
 {
@@ -73,13 +72,12 @@ namespace circle_display
                 cnvsCircles.Children.Add(ellipse);
             }
 
+            // Tekent een wit vierkant om de onderste helft van de cirkels te verbergen.
             System.Windows.Shapes.Rectangle rectangle = new System.Windows.Shapes.Rectangle();
             rectangle.Height = circleCenter;
             rectangle.Width = circleCenter * 2;
             rectangle.Margin = new Thickness(0, circleCenter, 0, 0);
             cnvsCircles.Children.Add(rectangle);
-
-            
 
             for (int i = 0; i < numberOfLeds; i++)
             {
@@ -103,6 +101,7 @@ namespace circle_display
             {
                 // Tekent de lijnen die de segmenten verdelen
                 Line line = new Line();
+
                 line.Stroke = new SolidColorBrush(Colors.Gray);
                 line.X1 = circleCenter;
                 line.Y1 = circleCenter;
@@ -153,7 +152,6 @@ namespace circle_display
                     // Tekent de bollen die de leds representateren op de snijpunten van de ellipsen met de rechten.
                     Ellipse cirkelLabel = new Ellipse();
                     cirkelLabel.Fill = new SolidColorBrush(Colors.Black);
-                    //cirkelLabel.MouseDown += CirkelLabel_MouseDown;
                     cirkelLabel.Tag = j.ToString() + "," + (15 -i).ToString();
 
                     endCirkel = new PointF((float)Convert.ToDecimal(circleCenter - Math.Cos(j * angle1)), (float)Convert.ToDecimal(circleCenter + Math.Sin(-j * angle1)));
@@ -178,15 +176,6 @@ namespace circle_display
             Ellipse ellipseChange = ellipseList[16 * Convert.ToInt32(coords[0]) + Convert.ToInt32(coords[1])];
 
             ellipseChange.Fill = new SolidColorBrush(Colors.Black);
-            
-            ellipseChange.Tag = cb.Tag;
-            //cirkelLabel.MouseDown += CirkelLabel_MouseDown;
-
-            endCirkel = new PointF((float)Convert.ToDecimal(circleCenter - Math.Cos((Convert.ToDouble(coords[0])) * angle1)), (float)Convert.ToDecimal(circleCenter + Math.Sin(-1 * (Convert.ToDouble(coords[0])) * angle1)));
-
-            Calculations.FindLineCircleIntersections(circleCenter, circleCenter, circleCenter - ledDistance - ((float)Convert.ToDecimal(coords[1])) * ledDistance, centerCirkel, endCirkel, out coord1, out coord2);
-            
-            ellipseChange.Margin = new Thickness(coord1.X - 10, coord1.Y - 10, 0, 0);
 
             cnvsCircles.Children.Remove(ellipseChange);
             cnvsCircles.Children.Add(ellipseChange);
@@ -195,7 +184,6 @@ namespace circle_display
             DataByte[Convert.ToInt16(coords[0]), Convert.ToInt16(coords[1])].red = 0;
             DataByte[Convert.ToInt16(coords[0]), Convert.ToInt16(coords[1])].green = 0;
             DataByte[Convert.ToInt16(coords[0]), Convert.ToInt16(coords[1])].blue = 0;
-
         }
 
         private void NewChb_Checked(object sender, RoutedEventArgs e)
@@ -210,14 +198,6 @@ namespace circle_display
             
             ellipseChange.Fill = ledFill;
             
-            ellipseChange.Tag = cb.Tag;
-            //cirkelLabel.MouseDown += CirkelLabel_MouseDown;
-
-            endCirkel = new PointF((float)Convert.ToDecimal(circleCenter - Math.Cos((Convert.ToDouble(coords[0])) * angle1)), (float)Convert.ToDecimal(circleCenter + Math.Sin(-1 * (Convert.ToDouble(coords[0])) * angle1)));
-
-            Calculations.FindLineCircleIntersections(circleCenter, circleCenter, circleCenter - ledDistance - ((float)Convert.ToDecimal(coords[1])) * ledDistance, centerCirkel, endCirkel, out coord1, out coord2);
-            ellipseChange.Margin = new Thickness(coord1.X - 10, coord1.Y - 10, 0, 0);
-
             cnvsCircles.Children.Remove(ellipseChange);
             cnvsCircles.Children.Add(ellipseChange);
 
@@ -227,15 +207,6 @@ namespace circle_display
             DataByte[Convert.ToInt16(coords[0]), Convert.ToInt16(coords[1])].blue = sldBlue.Value;
             
         }
-
-        //private void CirkelLabel_MouseDown(object sender, MouseButtonEventArgs e)
-        //{
-        //    Ellipse? temp = sender as Ellipse;
-
-        //    Debug.WriteLine(temp.Tag);
-
-        //    string currentButton = "chb" + temp.Tag;            
-        //}
 
         private void btnRedPreset_Click(object sender, RoutedEventArgs e)
         {
@@ -266,6 +237,8 @@ namespace circle_display
 
         private void btnImport_Click(object sender, RoutedEventArgs e)
         {
+            btnReset_Click(sender,e);
+
             APA102C[,] importAPA102C = new APA102C[32,16];
             string importData = System.IO.File.ReadAllText(@"C:\\Users\\aaron\\Desktop\\Bussiness project 2\\Circle display for leds\\circle display\\bin\\Debug\\net6.0-windows\SendData.txt");
             string[] importArray = importData.Split(",");
@@ -294,7 +267,15 @@ namespace circle_display
 
         private void btnReset_Click(object sender, RoutedEventArgs e)
         {
+            for (int i = 0; i < numberOfSegments; i++)
+            {
+                for (int j = 0; j < numberOfLeds; j++)
+                {
+                    CheckBox setCheck = checkList[16 * i + j];
 
+                    setCheck.IsChecked = false;
+                }
+            }
         }
     }
 }
