@@ -26,14 +26,14 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="circle_display.DynamicEvents">
-    <Position X="7.25" Y="2" Width="2" />
+    <Position X="7.25" Y="2" Width="2.25" />
     <TypeIdentifier>
       <HashCode>AAgAAAAAAAAABACAAAAABAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>DynamicEvents.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="circle_display.StaticDisplay">
-    <Position X="7.25" Y="4" Width="2" />
+    <Position X="7.25" Y="4" Width="2.25" />
     <TypeIdentifier>
       <HashCode>EAAAAAAAAAAAAAAAAAAAAAAAAAAwAAAAAEAAAAAAAAE=</HashCode>
       <FileName>StaticDisplay.cs</FileName>

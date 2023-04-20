@@ -9,9 +9,11 @@ using System.Threading.Tasks;
 // Dit wordt gebruikt om de lijnen en de ellipsen die de leds vorostellen te positioneren op het scherm.
 // All credit goes to the original author: http://www.csharphelper.com/howtos/howto_line_circle_intersection.html
 
+// AppendData() is zelf geschreven.
+
 namespace circle_display
 {
-    internal class Calculations
+    internal class Calculations: MainWindow
     {
         private double Distance(PointF p1, PointF p2)
         {

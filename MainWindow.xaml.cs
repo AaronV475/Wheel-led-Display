@@ -29,10 +29,11 @@ namespace circle_display
         public static readonly double angle1 = 0.0997331001; // Hoek tussen de segmenten in radialen. (Moet nog in formule verwerkt worden.)
 
         public static readonly int wheelCircle = 600; // Diameter van de kleinste cirkel van het wiel.
-        public readonly static int ledDistance = 25; // This is a the distance between the leds in a row.
+        public static readonly int ledDistance = 25; // This is a the distance between the leds in a row.
 
         public static readonly int numberOfLeds = 16; // Aantal leds per rij / lengte van de ledstrip.
         public static readonly int numberOfSegments = 63; // Aantal segmenten waarin het halve of hele wiel is ingedeeld.
+        public static readonly int numberOfLedstrips = 3; // Aantal ledstrips aanwezig op het wiel.
 
         public static readonly int circleCenter = (wheelCircle + (ledDistance * 2) * (numberOfLeds + 1)) / 2; // Y-locatie van het centrum van het wiel.
 
@@ -50,7 +51,7 @@ namespace circle_display
             public double blue;
         }
 
-        public APA102C[,] DataByte = new APA102C[63, 16];
+        public APA102C[,] DataByte = new APA102C[numberOfSegments, numberOfLeds];
 
         public static List<CheckBox> checkList = new List<CheckBox>();
         public static List<Ellipse> ellipseList = new List<Ellipse>();
@@ -126,7 +127,7 @@ namespace circle_display
             string currentEllipse = (string)cb.Tag;
             string[] coords = currentEllipse.Split(',');
 
-            Ellipse ellipseChange = ellipseList[16 * Convert.ToInt32(coords[0]) + Convert.ToInt32(coords[1])];
+            Ellipse ellipseChange = ellipseList[numberOfLeds * Convert.ToInt32(coords[0]) + Convert.ToInt32(coords[1])];
 
             ellipseChange.Fill = new SolidColorBrush(Colors.Black);
 
@@ -147,7 +148,7 @@ namespace circle_display
             string currentEllipse = (string)cb.Tag;
             string[] coords = currentEllipse.Split(',');
 
-            Ellipse ellipseChange = ellipseList[16 * Convert.ToInt32(coords[0]) + Convert.ToInt32(coords[1])];
+            Ellipse ellipseChange = ellipseList[numberOfLeds * Convert.ToInt32(coords[0]) + Convert.ToInt32(coords[1])];
             
             ellipseChange.Fill = ledFill;
             
@@ -178,7 +179,7 @@ namespace circle_display
         // Import file selector nog maken. Zal ook gebruikt worden om de afbeelding in te laden.
         private void btnImport_Click(object sender, RoutedEventArgs e)
         {
-            btnReset_Click(sender,e);
+            DynamicEvents.Reset();
 
             OpenFileDialog openFileDialog = new OpenFileDialog(); //Document openen met openfiledialog
             string startFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
@@ -227,7 +228,6 @@ namespace circle_display
                     ImageWindow windowTwo = new ImageWindow(this);
                     Bitmap _bitmap;
                     
-
                     double imageWidth = 600;
                     windowTwo.Owner = this;
                     windowTwo.Show();
@@ -251,7 +251,6 @@ namespace circle_display
                         enc.Frames.Add(BitmapFrame.Create(imageDecode));
                         enc.Save(outStream);
                         _bitmap = new System.Drawing.Bitmap(outStream);
-
                     }
 
                     APA102C[,] importAPA102C = new APA102C[numberOfSegments, numberOfLeds];
@@ -269,7 +268,7 @@ namespace circle_display
 
                             if (importAPA102C[i, j].brightness != 0)
                             {
-                                CheckBox setCheck = checkList[16 * i + j];
+                                CheckBox setCheck = checkList[numberOfLeds * i + j];
 
                                 sldRed.Value = importAPA102C[i, j].red;
                                 sldGreen.Value = importAPA102C[i, j].green;
@@ -279,32 +278,6 @@ namespace circle_display
                             }
                         }
                     }
-                    //int stride =(int)imageDecode.DecodePixelWidth * 4;
-                    //byte[] decodedPixels = new byte[(int)imageDecode.DecodePixelHeight * stride];
-                    //imageDecode.CopyPixels(decodedPixels, stride, 0);
-
-                    //for (int i = 0; i < numberOfSegments; i++)
-                    //{
-                    //    for (int j = 0; j < numberOfLeds; j++)
-                    //    {
-                    //        importAPA102C[i, j].brightness = Convert.ToDouble(decodedPixels[64 * i + 4 * j + 3]);
-                    //        importAPA102C[i, j].red = Convert.ToDouble(decodedPixels[64 * i + 4 * j]);
-                    //        importAPA102C[i, j].green = Convert.ToDouble(decodedPixels[64 * i + 4 * j + 1]);
-                    //        importAPA102C[i, j].blue = Convert.ToDouble(decodedPixels[64 * i + 4 * j + 2]);
-
-                    //        if (importAPA102C[i, j].brightness != 0)
-                    //        {
-                    //            CheckBox setCheck = checkList[16 * i + j];
-
-                    //            sldRed.Value = importAPA102C[i, j].red;
-                    //            sldGreen.Value = importAPA102C[i, j].green;
-                    //            sldBlue.Value = importAPA102C[i, j].blue;
-
-                    //            setCheck.IsChecked = true;
-                    //        }
-                    //    }
-                    //}
-
                 }
 
                 else

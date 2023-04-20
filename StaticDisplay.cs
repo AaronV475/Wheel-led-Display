@@ -21,7 +21,7 @@ namespace circle_display
         {
             _ellipse.Width = _ellipse.Height = wheelCircle + ledNumber * (ledDistance * 2) + ledDistance * 2;
             _ellipse.StrokeThickness = 1;
-            _ellipse.Margin = new Thickness(ledDistance * (16 - ledNumber), ledDistance * (16 - ledNumber), 0, 0);
+            _ellipse.Margin = new Thickness(ledDistance * (numberOfLeds - ledNumber), ledDistance * (numberOfLeds - ledNumber), 0, 0);
             _ellipse.Stroke = new SolidColorBrush(Colors.Gray);
             return _ellipse;
         }
@@ -31,7 +31,7 @@ namespace circle_display
             _label.Content = ledNumber.ToString();
             _label.Height = _label.Width = 30;
             _label.HorizontalContentAlignment = HorizontalAlignment.Center;
-            _label.Margin = new Thickness(0, (15 - ledNumber) * 20 - 5, 0, 0);
+            _label.Margin = new Thickness(0, ((numberOfLeds - 1) - ledNumber) * 20 - 5, 0, 0);
             return _label;
         }
 

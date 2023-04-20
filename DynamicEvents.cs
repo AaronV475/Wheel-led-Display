@@ -26,7 +26,7 @@ namespace circle_display
         public static Ellipse LedPrint(Ellipse _ellipse, int ledNumbern, int rowNumber)
         {
             _ellipse.Fill = new SolidColorBrush(Colors.Black);
-            _ellipse.Tag = rowNumber.ToString() + "," + (15 - ledNumbern).ToString();
+            _ellipse.Tag = rowNumber.ToString() + "," + ((numberOfLeds - 1) - ledNumbern).ToString();
 
             endCirkel = new PointF((float)Convert.ToDecimal(circleCenter + Math.Sin(rowNumber * angle1)), (float)Convert.ToDecimal(circleCenter - Math.Cos(-rowNumber * angle1)));
 
@@ -37,11 +37,12 @@ namespace circle_display
         }
         public static void Export(APA102C[,] ExportData)
         {
+            APA102C[,] completeAPA = new APA102C[numberOfSegments, numberOfLedstrips * numberOfLeds]; 
             using StreamWriter writeData = new StreamWriter("SendData.txt");
 
             for (int i = 0; i < numberOfSegments; i++)
             {
-                for (int j = 0; j < numberOfLeds; j++)
+                for (int j = 0; j < numberOfLedstrips * numberOfLeds; j++)
                 {
                     writeData.Write($"{Convert.ToString(ExportData[i, j].brightness)},{Convert.ToString(ExportData[i, j].red)},{Convert.ToString(ExportData[i, j].green)},{Convert.ToString(ExportData[i, j].blue)},");
                 }
@@ -53,7 +54,7 @@ namespace circle_display
             {
                 for (int j = 0; j < numberOfLeds; j++)
                 {
-                    CheckBox setCheck = checkList[16 * i + j];
+                    CheckBox setCheck = checkList[numberOfLeds * i + j];
 
                     setCheck.IsChecked = false;
                 }
