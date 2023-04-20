@@ -10,6 +10,9 @@ using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Shapes;
 
+// In DynamicEvents worden de methoden geplaatst die aangemaakt worden en later zullen aangepast of vervangen worden.
+// Dit zijn vooral de checkboxen, buttons en de cirkels die de leds voorstellen.
+
 namespace circle_display
 {
     internal class DynamicEvents : MainWindow

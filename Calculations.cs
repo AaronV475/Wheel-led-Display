@@ -5,6 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
+// Deze code berekend de snijpunten van de cirkel met de ellipsen.
+// Dit wordt gebruikt om de lijnen en de ellipsen die de leds vorostellen te positioneren op het scherm.
+// All credit goes to the original author: http://www.csharphelper.com/howtos/howto_line_circle_intersection.html
+
 namespace circle_display
 {
     internal class Calculations
@@ -14,8 +18,6 @@ namespace circle_display
             return Math.Sqrt(Math.Pow(p2.X - p1.X, 2) + Math.Pow(p2.Y - p1.Y, 2));
         }
 
-        // Deze code berekend de snijpunten van de cirkel met de ellipsen.
-        // Deze code komt van het internet: http://www.csharphelper.com/howtos/howto_line_circle_intersection.html
         public static int FindLineCircleIntersections(float cx, float cy, float radius, PointF point1, PointF point2,
                                                       out PointF intersection1, out PointF intersection2)
         {

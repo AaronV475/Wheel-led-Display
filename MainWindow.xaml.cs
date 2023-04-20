@@ -66,53 +66,30 @@ namespace circle_display
             {
                 // Tekent de cirkels van het wiel
                 Ellipse ellipse = new Ellipse();
-                ellipse.Width = ellipse.Height = wheelCircle + i * (ledDistance * 2) + ledDistance * 2;
-                ellipse.StrokeThickness = 1;
-                ellipse.Margin = new Thickness(ledDistance * (16 - i), ledDistance * (16 - i), 0, 0);
-                ellipse.Stroke = new SolidColorBrush(Colors.Gray);
+                StaticDisplay.PrintWheelCirkels(ellipse, i);
                 cnvsCircles.Children.Add(ellipse);
 
                 // Zet de labels bij de checkboxen met het aantal rijen aangeduid
-                Label labelChbRow = new Label();
-                labelChbRow.Content = i.ToString();
-                labelChbRow.Height = labelChbRow.Width = 30;
-                labelChbRow.HorizontalContentAlignment = HorizontalAlignment.Right;
-                labelChbRow.Margin = new Thickness(15, (15 - i) * 20 - 5, 0, 0);
-                cnvsCheckboxes.Children.Add(labelChbRow);
-
+                Label label = new Label();
+                StaticDisplay.PrintCheckboxLabelY(label, i);
+                cnvsCheckboxes.Children.Add(label);
             }
 
             for (int j = 0; j < numberOfSegments; j++)
             {
                 // Tekent de lijnen die de segmenten verdelen
                 Line line = new Line();
-
-                line.Stroke = new SolidColorBrush(Colors.Gray);
-                line.X1 = circleCenter;
-                line.Y1 = circleCenter;
-                line.X2 = circleCenter + Math.Cos(j * angle1 + Math.PI / 2) * (circleCenter - ledDistance);
-                line.Y2 = circleCenter - Math.Sin(j * angle1 + Math.PI / 2) * (circleCenter - ledDistance);
+                StaticDisplay.PrintWheelLine(line, j);
                 cnvsCircles.Children.Add(line);
 
                 // Tekent de labels bij de checkboxen met het aantal kolommen aangeduid
-                Label lblKolom = new Label();
-                lblKolom.Content = j.ToString();
-                lblKolom.Height = lblKolom.Width = 30;
-                lblKolom.HorizontalContentAlignment = HorizontalAlignment.Center;
-                lblKolom.Margin = new Thickness(j * 20 + 43, numberOfLeds * 20 - 10, 0, 0);
-                cnvsCheckboxes.Children.Add(lblKolom);
+                Label lblCheckbox = new Label();
+                StaticDisplay.PrintCheckboxLabelX(lblCheckbox, j);
+                cnvsCheckboxes.Children.Add(lblCheckbox);
+
                 // Tekent de labels bij de cirkel kolommen.
                 Label lblCirkel = new Label();
-                lblCirkel.Content = (j).ToString();
-                lblCirkel.Height = lblCirkel.Width = 30;
-                lblCirkel.HorizontalAlignment = HorizontalAlignment.Left;
-                lblCirkel.VerticalAlignment = VerticalAlignment.Top;
-
-                endCirkel = new PointF((float)Convert.ToDecimal(circleCenter + Math.Sin(j * angle1)), (float)Convert.ToDecimal(circleCenter - Math.Cos(-j * angle1)));
-
-                Calculations.FindLineCircleIntersections(circleCenter, circleCenter, circleCenter, centerCirkel, endCirkel, out coord1, out coord2);
-
-                lblCirkel.Margin = new Thickness(coord1.X - 10, coord1.Y - 15, 0, 0);
+                StaticDisplay.PrintWheelLabel(lblCirkel, j);
                 cnvsCircles.Children.Add(lblCirkel);
             }
 
@@ -121,29 +98,23 @@ namespace circle_display
                 for (int i = 0; i < numberOfLeds; i++)
                 {
                     // Tekent de checkboxen die de data array moeten voorstellen
-                    System.Windows.Controls.CheckBox newChb = new CheckBox();
+                    CheckBox _checkbox = new CheckBox();
+                    DynamicEvents.CheckboxPrint(_checkbox, i, j);
 
-                    newChb.Tag = (j).ToString() + "," + (i).ToString();
-                    newChb.Checked += NewChb_Checked;
-                    newChb.Unchecked += NewChb_Unchecked;
-                    newChb.Margin = new Thickness(j * 20 + 50, i * 20, 0, 0);
+                    _checkbox.Checked += NewChb_Checked;
+                    _checkbox.Unchecked += NewChb_Unchecked;
 
-                    checkList.Add(newChb);
-                    cnvsCheckboxes.Children.Add(newChb);
+                    checkList.Add(_checkbox);
+                    cnvsCheckboxes.Children.Add(_checkbox);
 
                     // Tekent de bollen die de leds representateren op de snijpunten van de ellipsen met de rechten.
-                    Ellipse cirkelLabel = new Ellipse();
-                    cirkelLabel.Fill = new SolidColorBrush(Colors.Black);
-                    cirkelLabel.Tag = j.ToString() + "," + (15 -i).ToString();
+                    Ellipse LED = new Ellipse();
+                    //LED.MouseLeftButtonDown += LED_MouseLeftButtonDown;
+                    //LED.MouseRightButtonDown += LED_MouseRightButtonDown;
+                    DynamicEvents.LedPrint(LED, i, j);
 
-                    endCirkel = new PointF((float)Convert.ToDecimal(circleCenter + Math.Sin(j * angle1)), (float)Convert.ToDecimal(circleCenter - Math.Cos(-j * angle1)));
-
-                    Calculations.FindLineCircleIntersections(circleCenter, circleCenter, (circleCenter - ledDistance) - i * ledDistance, centerCirkel, endCirkel, out coord1, out coord2);
-
-                    cirkelLabel.Margin = new Thickness(coord1.X - 10, coord1.Y - 10, 0, 0);
-
-                    ellipseList.Add(cirkelLabel);
-                    cnvsCircles.Children.Add(cirkelLabel);
+                    ellipseList.Add(LED);
+                    cnvsCircles.Children.Add(LED);
                 }
             }
         }
@@ -254,6 +225,8 @@ namespace circle_display
                     BitmapImage image = new BitmapImage();
                     BitmapImage imageDecode = new BitmapImage();
                     ImageWindow windowTwo = new ImageWindow(this);
+                    Bitmap _bitmap;
+                    
 
                     double imageWidth = 600;
                     windowTwo.Owner = this;
@@ -272,19 +245,27 @@ namespace circle_display
                     windowTwo.EditImage(imageWidth, imageWidth * image.Height / image.Width, image);
                     windowTwo.EditBitmap(imageWidth, imageWidth * image.Height / image.Width, imageDecode);
 
+                    using (MemoryStream outStream = new MemoryStream())
+                    {
+                        BitmapEncoder enc = new BmpBitmapEncoder();
+                        enc.Frames.Add(BitmapFrame.Create(imageDecode));
+                        enc.Save(outStream);
+                        _bitmap = new System.Drawing.Bitmap(outStream);
+
+                    }
+
                     APA102C[,] importAPA102C = new APA102C[numberOfSegments, numberOfLeds];
-                    int stride = (int)imageDecode.PixelWidth * 4;
-                    byte[] decodedPixels = new byte[(int)imageDecode.PixelHeight * stride];
-                    imageDecode.CopyPixels(decodedPixels, stride, 0);
 
                     for (int i = 0; i < numberOfSegments; i++)
                     {
                         for (int j = 0; j < numberOfLeds; j++)
                         {
-                            importAPA102C[i, j].brightness = Convert.ToDouble(decodedPixels[64 * i + 4 * j + 3]);
-                            importAPA102C[i, j].red = Convert.ToDouble(decodedPixels[64 * i + 4 * j]);
-                            importAPA102C[i, j].green = Convert.ToDouble(decodedPixels[64 * i + 4 * j + 1]);
-                            importAPA102C[i, j].blue = Convert.ToDouble(decodedPixels[64 * i + 4 * j + 2]);
+                            System.Drawing.Color _color = _bitmap.GetPixel(i,j);
+
+                            importAPA102C[i, j].brightness = _color.A;
+                            importAPA102C[i, j].red = _color.R;
+                            importAPA102C[i, j].green = _color.G;
+                            importAPA102C[i, j].blue = _color.B;
 
                             if (importAPA102C[i, j].brightness != 0)
                             {
@@ -298,6 +279,31 @@ namespace circle_display
                             }
                         }
                     }
+                    //int stride =(int)imageDecode.DecodePixelWidth * 4;
+                    //byte[] decodedPixels = new byte[(int)imageDecode.DecodePixelHeight * stride];
+                    //imageDecode.CopyPixels(decodedPixels, stride, 0);
+
+                    //for (int i = 0; i < numberOfSegments; i++)
+                    //{
+                    //    for (int j = 0; j < numberOfLeds; j++)
+                    //    {
+                    //        importAPA102C[i, j].brightness = Convert.ToDouble(decodedPixels[64 * i + 4 * j + 3]);
+                    //        importAPA102C[i, j].red = Convert.ToDouble(decodedPixels[64 * i + 4 * j]);
+                    //        importAPA102C[i, j].green = Convert.ToDouble(decodedPixels[64 * i + 4 * j + 1]);
+                    //        importAPA102C[i, j].blue = Convert.ToDouble(decodedPixels[64 * i + 4 * j + 2]);
+
+                    //        if (importAPA102C[i, j].brightness != 0)
+                    //        {
+                    //            CheckBox setCheck = checkList[16 * i + j];
+
+                    //            sldRed.Value = importAPA102C[i, j].red;
+                    //            sldGreen.Value = importAPA102C[i, j].green;
+                    //            sldBlue.Value = importAPA102C[i, j].blue;
+
+                    //            setCheck.IsChecked = true;
+                    //        }
+                    //    }
+                    //}
 
                 }
 
