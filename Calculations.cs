@@ -15,6 +15,7 @@ namespace circle_display
         }
 
         // Deze code berekend de snijpunten van de cirkel met de ellipsen.
+        // Deze code komt van het internet: http://www.csharphelper.com/howtos/howto_line_circle_intersection.html
         public static int FindLineCircleIntersections(float cx, float cy, float radius, PointF point1, PointF point2,
                                                       out PointF intersection1, out PointF intersection2)
         {

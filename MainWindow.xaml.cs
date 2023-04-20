@@ -17,6 +17,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using Microsoft.Win32;
 
 namespace circle_display
 {
@@ -25,23 +26,23 @@ namespace circle_display
     /// </summary>
     public partial class MainWindow : Window
     {
-        public static double angle1 = 0.1013416985; // Hoek tussen de segmenten in radialen. (Moet nog in formule verwerkt worden.)
+        public static readonly double angle1 = 0.0997331001; // Hoek tussen de segmenten in radialen. (Moet nog in formule verwerkt worden.)
 
-        static int wheelCircle = 400; // Diameter van de kleinste cirkel van het wiel.
-        public static int ledDistance = 25; // This is a the distance between the leds in a row.
+        public static readonly int wheelCircle = 600; // Diameter van de kleinste cirkel van het wiel.
+        public readonly static int ledDistance = 25; // This is a the distance between the leds in a row.
 
-        static int numberOfLeds = 16; // Aantal leds per rij / lengte van de ledstrip.
-        static int numberOfSegments = 32; // Aantal segmenten waarin het halve of hele wiel is ingedeeld.
+        public static readonly int numberOfLeds = 16; // Aantal leds per rij / lengte van de ledstrip.
+        public static readonly int numberOfSegments = 63; // Aantal segmenten waarin het halve of hele wiel is ingedeeld.
 
-        public static int circleCenter = (wheelCircle + (ledDistance * 2) * (numberOfLeds + 1)) / 2; // Y-locatie van het centrum van het wiel.
+        public static readonly int circleCenter = (wheelCircle + (ledDistance * 2) * (numberOfLeds + 1)) / 2; // Y-locatie van het centrum van het wiel.
 
 
-        PointF centerCirkel = new PointF(circleCenter, circleCenter);
-        PointF endCirkel;
-        PointF coord1;
-        PointF coord2;
+        public static readonly PointF centerCirkel = new PointF(circleCenter, circleCenter);
+        public static PointF endCirkel;
+        public static PointF coord1;
+        public static PointF coord2;
 
-        struct APA102C
+        public struct APA102C
         {
             public double brightness;
             public double red;
@@ -49,16 +50,16 @@ namespace circle_display
             public double blue;
         }
 
-        APA102C[,] DataByte = new APA102C[32, 16];
+        public APA102C[,] DataByte = new APA102C[63, 16];
 
-        List<CheckBox> checkList = new List<CheckBox>();
-        List<Ellipse> ellipseList = new List<Ellipse>();
-        
+        public static List<CheckBox> checkList = new List<CheckBox>();
+        public static List<Ellipse> ellipseList = new List<Ellipse>();
+
         public MainWindow()
         {
             InitializeComponent();
         }
-        
+
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
             for (int i = 0; i < numberOfLeds; i++)
@@ -70,31 +71,15 @@ namespace circle_display
                 ellipse.Margin = new Thickness(ledDistance * (16 - i), ledDistance * (16 - i), 0, 0);
                 ellipse.Stroke = new SolidColorBrush(Colors.Gray);
                 cnvsCircles.Children.Add(ellipse);
-            }
 
-            // Tekent een wit vierkant om de onderste helft van de cirkels te verbergen.
-            System.Windows.Shapes.Rectangle rectangle = new System.Windows.Shapes.Rectangle();
-            rectangle.Height = circleCenter;
-            rectangle.Width = circleCenter * 2;
-            rectangle.Margin = new Thickness(0, circleCenter, 0, 0);
-            cnvsCircles.Children.Add(rectangle);
-
-            for (int i = 0; i < numberOfLeds; i++)
-            {
                 // Zet de labels bij de checkboxen met het aantal rijen aangeduid
                 Label labelChbRow = new Label();
                 labelChbRow.Content = i.ToString();
                 labelChbRow.Height = labelChbRow.Width = 30;
                 labelChbRow.HorizontalContentAlignment = HorizontalAlignment.Right;
-                labelChbRow.Margin = new Thickness(15, (15 - i) * 30 + circleCenter + 95, 0, 0);
-                cnvsCircles.Children.Add(labelChbRow);
+                labelChbRow.Margin = new Thickness(15, (15 - i) * 20 - 5, 0, 0);
+                cnvsCheckboxes.Children.Add(labelChbRow);
 
-                // Zet de labels bij de cirkels met het aantal rijen aangeduid
-                Label labelCrkRow = new Label();
-                labelCrkRow.Content = (15 - i).ToString();
-                labelCrkRow.Height = labelCrkRow.Width = 30;
-                labelCrkRow.Margin = new Thickness(i * ledDistance + 15, circleCenter + 10, 0, 0);
-                cnvsCircles.Children.Add(labelCrkRow);
             }
 
             for (int j = 0; j < numberOfSegments; j++)
@@ -105,28 +90,25 @@ namespace circle_display
                 line.Stroke = new SolidColorBrush(Colors.Gray);
                 line.X1 = circleCenter;
                 line.Y1 = circleCenter;
-                line.X2 = circleCenter + Math.Cos(j * angle1) * (circleCenter - ledDistance);
-                line.Y2 = circleCenter + Math.Sin(-j * angle1) * (circleCenter - ledDistance);
+                line.X2 = circleCenter + Math.Cos(j * angle1 + Math.PI / 2) * (circleCenter - ledDistance);
+                line.Y2 = circleCenter - Math.Sin(j * angle1 + Math.PI / 2) * (circleCenter - ledDistance);
                 cnvsCircles.Children.Add(line);
 
                 // Tekent de labels bij de checkboxen met het aantal kolommen aangeduid
                 Label lblKolom = new Label();
-
                 lblKolom.Content = j.ToString();
                 lblKolom.Height = lblKolom.Width = 30;
                 lblKolom.HorizontalContentAlignment = HorizontalAlignment.Center;
-                lblKolom.Margin = new Thickness(j * 30 + 43, circleCenter + 90 + numberOfLeds * 30, 0, 0);
-                cnvsCircles.Children.Add(lblKolom);
-
+                lblKolom.Margin = new Thickness(j * 20 + 43, numberOfLeds * 20 - 10, 0, 0);
+                cnvsCheckboxes.Children.Add(lblKolom);
                 // Tekent de labels bij de cirkel kolommen.
                 Label lblCirkel = new Label();
-
-                lblCirkel.Content = (31 - j).ToString();
+                lblCirkel.Content = (j).ToString();
                 lblCirkel.Height = lblCirkel.Width = 30;
                 lblCirkel.HorizontalAlignment = HorizontalAlignment.Left;
                 lblCirkel.VerticalAlignment = VerticalAlignment.Top;
 
-                endCirkel = new PointF((float)Convert.ToDecimal(circleCenter + Math.Cos(j * angle1)), (float)Convert.ToDecimal(circleCenter + Math.Sin(-j * angle1)));
+                endCirkel = new PointF((float)Convert.ToDecimal(circleCenter + Math.Sin(j * angle1)), (float)Convert.ToDecimal(circleCenter - Math.Cos(-j * angle1)));
 
                 Calculations.FindLineCircleIntersections(circleCenter, circleCenter, circleCenter, centerCirkel, endCirkel, out coord1, out coord2);
 
@@ -144,17 +126,17 @@ namespace circle_display
                     newChb.Tag = (j).ToString() + "," + (i).ToString();
                     newChb.Checked += NewChb_Checked;
                     newChb.Unchecked += NewChb_Unchecked;
-                    newChb.Margin = new Thickness(j * 30 + 50, i * 30 + circleCenter + 100, 0, 0);
+                    newChb.Margin = new Thickness(j * 20 + 50, i * 20, 0, 0);
 
                     checkList.Add(newChb);
-                    cnvsCircles.Children.Add(newChb);
+                    cnvsCheckboxes.Children.Add(newChb);
 
                     // Tekent de bollen die de leds representateren op de snijpunten van de ellipsen met de rechten.
                     Ellipse cirkelLabel = new Ellipse();
                     cirkelLabel.Fill = new SolidColorBrush(Colors.Black);
                     cirkelLabel.Tag = j.ToString() + "," + (15 -i).ToString();
 
-                    endCirkel = new PointF((float)Convert.ToDecimal(circleCenter - Math.Cos(j * angle1)), (float)Convert.ToDecimal(circleCenter + Math.Sin(-j * angle1)));
+                    endCirkel = new PointF((float)Convert.ToDecimal(circleCenter + Math.Sin(j * angle1)), (float)Convert.ToDecimal(circleCenter - Math.Cos(-j * angle1)));
 
                     Calculations.FindLineCircleIntersections(circleCenter, circleCenter, (circleCenter - ledDistance) - i * ledDistance, centerCirkel, endCirkel, out coord1, out coord2);
 
@@ -222,60 +204,116 @@ namespace circle_display
             sldBlue.Value = 255;
         }
 
-        private void btnExport_Click(object sender, RoutedEventArgs e)
-        {
-            using StreamWriter writeData = new StreamWriter("SendData.txt");
-            
-            for (int i = 0; i < 32; i++)
-            {
-                for (int j = 0; j < 16; j++)
-                {
-                    writeData.Write($"{Convert.ToString(DataByte[i, j].brightness)},{Convert.ToString(DataByte[i, j].red)},{Convert.ToString(DataByte[i, j].green)},{Convert.ToString(DataByte[i, j].blue)},");
-                }
-            }
-        }
-
+        // Import file selector nog maken. Zal ook gebruikt worden om de afbeelding in te laden.
         private void btnImport_Click(object sender, RoutedEventArgs e)
         {
             btnReset_Click(sender,e);
 
-            APA102C[,] importAPA102C = new APA102C[32,16];
-            string importData = System.IO.File.ReadAllText(@"C:\\Users\\aaron\\Desktop\\Bussiness project 2\\Circle display for leds\\circle display\\bin\\Debug\\net6.0-windows\SendData.txt");
-            string[] importArray = importData.Split(",");
-            for (int i = 0; i < numberOfSegments; i++)
+            OpenFileDialog openFileDialog = new OpenFileDialog(); //Document openen met openfiledialog
+            string startFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+            openFileDialog.InitialDirectory = startFolder;
+            openFileDialog.Filter = "Image Files| *.jpg; *.png|Text Files| *.txt|All files (*.*)|*.*";
+
+            if (openFileDialog.ShowDialog() == true) // User klikt op 'openen'
             {
-                for (int j = 0; j < numberOfLeds; j++)
+                string filePath = openFileDialog.FileName;
+
+                // Als de user een txt file selecteerd wordt die direct geprint op de checkboxesn en dus ook op de visual display
+                if (filePath.Contains(".txt"))
                 {
-                    importAPA102C[i, j].brightness = Convert.ToDouble(importArray[64 * i + 4 * j]);
-                    importAPA102C[i, j].red = Convert.ToDouble(importArray[64 * i + 4 * j + 1]);
-                    importAPA102C[i, j].green = Convert.ToDouble(importArray[64 * i + 4 * j + 2]);
-                    importAPA102C[i, j].blue = Convert.ToDouble(importArray[64 * i + 4 * j + 3]);
-
-                    if (importAPA102C[i,j].brightness != 0)
+                    APA102C[,] importAPA102C = new APA102C[numberOfSegments, numberOfLeds];
+                    string importData = System.IO.File.ReadAllText(filePath);
+                    string[] importArray = importData.Split(",");
+                    for (int i = 0; i < numberOfSegments; i++)
                     {
-                        CheckBox setCheck = checkList[16 * i + j];
-                        
-                        sldRed.Value = importAPA102C[i, j].red;
-                        sldGreen.Value = importAPA102C[i, j].green;
-                        sldBlue.Value = importAPA102C[i, j].blue;
+                        for (int j = 0; j < numberOfLeds; j++)
+                        {
+                            importAPA102C[i, j].brightness = Convert.ToDouble(importArray[64 * i + 4 * j]);
+                            importAPA102C[i, j].red = Convert.ToDouble(importArray[64 * i + 4 * j + 1]);
+                            importAPA102C[i, j].green = Convert.ToDouble(importArray[64 * i + 4 * j + 2]);
+                            importAPA102C[i, j].blue = Convert.ToDouble(importArray[64 * i + 4 * j + 3]);
 
-                        setCheck.IsChecked = true;
+                            if (importAPA102C[i, j].brightness != 0)
+                            {
+                                CheckBox setCheck = checkList[16 * i + j];
+
+                                sldRed.Value = importAPA102C[i, j].red;
+                                sldGreen.Value = importAPA102C[i, j].green;
+                                sldBlue.Value = importAPA102C[i, j].blue;
+
+                                setCheck.IsChecked = true;
+                            }
+                        }
                     }
+                }
+
+                // Als de ingelezen file een image is wordt deze op een ander window gezet samen met de 32 x 16 bitmap die gebruikt wordt om de data uit te halen.
+                // Deze wordt dan ook op de checkboxes gezet. (WIP)
+                else if(filePath.Contains(".png") || filePath.Contains(".jpg"))
+                {
+                    BitmapImage image = new BitmapImage();
+                    BitmapImage imageDecode = new BitmapImage();
+                    ImageWindow windowTwo = new ImageWindow(this);
+
+                    double imageWidth = 600;
+                    windowTwo.Owner = this;
+                    windowTwo.Show();
+
+                    imageDecode.BeginInit();
+                    imageDecode.UriSource = new Uri(filePath);
+                    imageDecode.DecodePixelWidth = numberOfSegments;
+                    imageDecode.DecodePixelHeight = numberOfLeds;
+                    imageDecode.EndInit();
+
+                    image.BeginInit();
+                    image.UriSource = new Uri(filePath);
+                    image.EndInit();
+
+                    windowTwo.EditImage(imageWidth, imageWidth * image.Height / image.Width, image);
+                    windowTwo.EditBitmap(imageWidth, imageWidth * image.Height / image.Width, imageDecode);
+
+                    APA102C[,] importAPA102C = new APA102C[numberOfSegments, numberOfLeds];
+                    int stride = (int)imageDecode.PixelWidth * 4;
+                    byte[] decodedPixels = new byte[(int)imageDecode.PixelHeight * stride];
+                    imageDecode.CopyPixels(decodedPixels, stride, 0);
+
+                    for (int i = 0; i < numberOfSegments; i++)
+                    {
+                        for (int j = 0; j < numberOfLeds; j++)
+                        {
+                            importAPA102C[i, j].brightness = Convert.ToDouble(decodedPixels[64 * i + 4 * j + 3]);
+                            importAPA102C[i, j].red = Convert.ToDouble(decodedPixels[64 * i + 4 * j]);
+                            importAPA102C[i, j].green = Convert.ToDouble(decodedPixels[64 * i + 4 * j + 1]);
+                            importAPA102C[i, j].blue = Convert.ToDouble(decodedPixels[64 * i + 4 * j + 2]);
+
+                            if (importAPA102C[i, j].brightness != 0)
+                            {
+                                CheckBox setCheck = checkList[16 * i + j];
+
+                                sldRed.Value = importAPA102C[i, j].red;
+                                sldGreen.Value = importAPA102C[i, j].green;
+                                sldBlue.Value = importAPA102C[i, j].blue;
+
+                                setCheck.IsChecked = true;
+                            }
+                        }
+                    }
+
+                }
+
+                else
+                {
+                    MessageBox.Show("This is not a valid file.\nPick a text file or an image.","Warning",MessageBoxButton.OK, MessageBoxImage.Exclamation);
                 }
             }
         }
-
         private void btnReset_Click(object sender, RoutedEventArgs e)
         {
-            for (int i = 0; i < numberOfSegments; i++)
-            {
-                for (int j = 0; j < numberOfLeds; j++)
-                {
-                    CheckBox setCheck = checkList[16 * i + j];
-
-                    setCheck.IsChecked = false;
-                }
-            }
+            DynamicEvents.Reset();
+        }
+        private void btnExport_Click(object sender, RoutedEventArgs e)
+        {
+            DynamicEvents.Export(DataByte);
         }
     }
 }
