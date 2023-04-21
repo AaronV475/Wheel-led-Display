@@ -196,27 +196,37 @@ namespace circle_display
                     APA102C[,] importAPA102C = new APA102C[numberOfSegments, numberOfLeds];
                     string importData = System.IO.File.ReadAllText(filePath);
                     string[] importArray = importData.Split(",");
-                    for (int i = 0; i < numberOfSegments; i++)
+
+                    // Tries to import the text data, if this data is incomplete or corrupted an exception is thrown.
+                    try
                     {
-                        for (int j = 0; j < numberOfLeds; j++)
+                        for (int i = 0; i < numberOfSegments; i++)
                         {
-                            importAPA102C[i, j].brightness = Convert.ToDouble(importArray[64 * i + 4 * j]);
-                            importAPA102C[i, j].red = Convert.ToDouble(importArray[64 * i + 4 * j + 1]);
-                            importAPA102C[i, j].green = Convert.ToDouble(importArray[64 * i + 4 * j + 2]);
-                            importAPA102C[i, j].blue = Convert.ToDouble(importArray[64 * i + 4 * j + 3]);
-
-                            if (importAPA102C[i, j].brightness != 0)
+                            for (int j = 0; j < numberOfLeds; j++)
                             {
-                                CheckBox setCheck = checkList[16 * i + j];
+                                importAPA102C[i, j].brightness = Convert.ToDouble(importArray[64 * i + 4 * j]);
+                                importAPA102C[i, j].red = Convert.ToDouble(importArray[64 * i + 4 * j + 1]);
+                                importAPA102C[i, j].green = Convert.ToDouble(importArray[64 * i + 4 * j + 2]);
+                                importAPA102C[i, j].blue = Convert.ToDouble(importArray[64 * i + 4 * j + 3]);
 
-                                sldRed.Value = importAPA102C[i, j].red;
-                                sldGreen.Value = importAPA102C[i, j].green;
-                                sldBlue.Value = importAPA102C[i, j].blue;
+                                if (importAPA102C[i, j].brightness != 0)
+                                {
+                                    CheckBox setCheck = checkList[16 * i + j];
 
-                                setCheck.IsChecked = true;
+                                    sldRed.Value = importAPA102C[i, j].red;
+                                    sldGreen.Value = importAPA102C[i, j].green;
+                                    sldBlue.Value = importAPA102C[i, j].blue;
+
+                                    setCheck.IsChecked = true;
+                                }
                             }
                         }
                     }
+                    catch (FormatException)
+                    {
+                        MessageBox.Show("The data was not correctly saved to this file.\nCheck again or try another file", "Warning", MessageBoxButton.OK, MessageBoxImage.Exclamation);
+                    }
+                    
                 }
 
                 // Als de ingelezen file een image is wordt deze op een ander window gezet samen met de 32 x 16 bitmap die gebruikt wordt om de data uit te halen.
