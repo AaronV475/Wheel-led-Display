@@ -28,7 +28,7 @@ namespace circle_display
             _ellipse.Fill = new SolidColorBrush(Colors.Black);
             _ellipse.Tag = rowNumber.ToString() + "," + ((numberOfLeds - 1) - ledNumbern).ToString();
 
-            endCirkel = new PointF((float)Convert.ToDecimal(circleCenter + Math.Sin(rowNumber * angle1)), (float)Convert.ToDecimal(circleCenter - Math.Cos(-rowNumber * angle1)));
+            endCirkel = new PointF((float)Convert.ToDecimal(circleCenter + Math.Sin(rowNumber * angle)), (float)Convert.ToDecimal(circleCenter - Math.Cos(-rowNumber * angle)));
 
             Calculations.FindLineCircleIntersections(circleCenter, circleCenter, (circleCenter - ledDistance) - ledNumbern * ledDistance, centerCirkel, endCirkel, out coord1, out coord2);
 
@@ -42,7 +42,7 @@ namespace circle_display
 
             for (int i = 0; i < numberOfSegments; i++)
             {
-                for (int j = 0; j < numberOfLedstrips * numberOfLeds; j++)
+                for (int j = 0; j < numberOfLeds; j++)
                 {
                     writeData.Write($"{Convert.ToString(ExportData[i, j].brightness)},{Convert.ToString(ExportData[i, j].red)},{Convert.ToString(ExportData[i, j].green)},{Convert.ToString(ExportData[i, j].blue)},");
                 }

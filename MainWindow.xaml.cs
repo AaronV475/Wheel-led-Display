@@ -26,8 +26,6 @@ namespace circle_display
     /// </summary>
     public partial class MainWindow : Window
     {
-        public static readonly double angle1 = 0.0997331001; // Hoek tussen de segmenten in radialen. (Moet nog in formule verwerkt worden.)
-
         public static readonly int wheelCircle = 600; // Diameter van de kleinste cirkel van het wiel.
         public static readonly int ledDistance = 25; // This is a the distance between the leds in a row.
 
@@ -35,8 +33,9 @@ namespace circle_display
         public static readonly int numberOfSegments = 63; // Aantal segmenten waarin het halve of hele wiel is ingedeeld.
         public static readonly int numberOfLedstrips = 3; // Aantal ledstrips aanwezig op het wiel.
 
-        public static readonly int circleCenter = (wheelCircle + (ledDistance * 2) * (numberOfLeds + 1)) / 2; // Y-locatie van het centrum van het wiel.
+        public static readonly double angle = (2 * Math.PI) / numberOfSegments; //Hoek tussen de segmenten in radialen.
 
+        public static readonly int circleCenter = (wheelCircle + (ledDistance * 2) * (numberOfLeds + 1)) / 2; // Y-locatie van het centrum van het wiel.
 
         public static readonly PointF centerCirkel = new PointF(circleCenter, circleCenter);
         public static PointF endCirkel;
@@ -123,6 +122,7 @@ namespace circle_display
         private void NewChb_Unchecked(object sender, RoutedEventArgs e)
         {
             CheckBox? cb = sender as CheckBox;
+            cb.Background = new SolidColorBrush(Colors.White);
 
             string currentEllipse = (string)cb.Tag;
             string[] coords = currentEllipse.Split(',');
@@ -144,6 +144,7 @@ namespace circle_display
         {
             CheckBox? cb = sender as CheckBox;
             SolidColorBrush ledFill = new SolidColorBrush(System.Windows.Media.Color.FromRgb(Convert.ToByte(sldRed.Value), Convert.ToByte(sldGreen.Value), Convert.ToByte(sldBlue.Value)));
+            cb.Background = ledFill;
 
             string currentEllipse = (string)cb.Tag;
             string[] coords = currentEllipse.Split(',');
@@ -176,7 +177,6 @@ namespace circle_display
             sldBlue.Value = 255;
         }
 
-        // Import file selector nog maken. Zal ook gebruikt worden om de afbeelding in te laden.
         private void btnImport_Click(object sender, RoutedEventArgs e)
         {
             DynamicEvents.Reset();

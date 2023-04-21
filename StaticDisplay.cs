@@ -12,7 +12,6 @@ using System.Windows.Controls;
 // In de StaticDisplay class worden alle objecten geplaatst die aangemaakt worden en niet meer veranderen.
 // Dit zijn vooral de labels en de visuele hulpen de gebruikt worden.
 
-
 namespace circle_display
 {
     internal class StaticDisplay: MainWindow
@@ -39,8 +38,8 @@ namespace circle_display
         {
             _line.Stroke = new SolidColorBrush(Colors.Gray);
             _line.X1 = _line.Y1 = circleCenter;
-            _line.X2 = circleCenter + Math.Cos(rowNumber * angle1 + Math.PI / 2) * (circleCenter - ledDistance);
-            _line.Y2 = circleCenter - Math.Sin(rowNumber * angle1 + Math.PI / 2) * (circleCenter - ledDistance);
+            _line.X2 = circleCenter + Math.Cos(rowNumber * angle + Math.PI / 2) * (circleCenter - ledDistance);
+            _line.Y2 = circleCenter - Math.Sin(rowNumber * angle + Math.PI / 2) * (circleCenter - ledDistance);
             return _line;
         }
 
@@ -60,7 +59,7 @@ namespace circle_display
             label.HorizontalAlignment = HorizontalAlignment.Left;
             label.VerticalAlignment = VerticalAlignment.Top;
 
-            endCirkel = new PointF((float)Convert.ToDecimal(circleCenter + Math.Sin(rowNumber * angle1)), (float)Convert.ToDecimal(circleCenter - Math.Cos(-rowNumber * angle1)));
+            endCirkel = new PointF((float)Convert.ToDecimal(circleCenter + Math.Sin(rowNumber * angle)), (float)Convert.ToDecimal(circleCenter - Math.Cos(-rowNumber * angle)));
 
             Calculations.FindLineCircleIntersections(circleCenter, circleCenter, circleCenter, centerCirkel, endCirkel, out coord1, out coord2);
 
