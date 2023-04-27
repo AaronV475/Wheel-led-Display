@@ -37,15 +37,56 @@ namespace circle_display
         }
         public static void Export(APA102C[,] ExportData)
         {
-            APA102C[,] completeAPA = new APA102C[numberOfSegments, numberOfLedstrips * numberOfLeds]; 
             using StreamWriter writeData = new StreamWriter("SendData.txt");
 
-            for (int i = 0; i < numberOfSegments; i++)
+
+            for (int i = 0; i < numberOfSegments / numberOfLedstrips; i++)
             {
                 for (int j = 0; j < numberOfLeds; j++)
                 {
                     writeData.Write($"{Convert.ToString(ExportData[i, j].brightness)},{Convert.ToString(ExportData[i, j].red)},{Convert.ToString(ExportData[i, j].green)},{Convert.ToString(ExportData[i, j].blue)},");
                 }
+                for(int j = 0; j < numberOfLeds; j++)
+                {
+                    writeData.Write($"{Convert.ToString(ExportData[21 + i, j].brightness)},{Convert.ToString(ExportData[21 + i, j].red)},{Convert.ToString(ExportData[21 + i, j].green)},{Convert.ToString(ExportData[21 + i, j].blue)},");
+                }
+                for (int j = 0; j < numberOfLeds; j++)
+                {
+                    writeData.Write($"{Convert.ToString(ExportData[42 + i, j].brightness)},{Convert.ToString(ExportData[42 + i, j].red)},{Convert.ToString(ExportData[42 + i, j].green)},{Convert.ToString(ExportData[42 + i, j].blue)},");
+                }
+                writeData.WriteLine("");
+            }
+            for (int i = 0; i < numberOfSegments / numberOfLedstrips; i++)
+            {
+                for (int j = 0; j < numberOfLeds; j++)
+                {
+                    writeData.Write($"{Convert.ToString(ExportData[21 + i, j].brightness)},{Convert.ToString(ExportData[21 + i, j].red)},{Convert.ToString(ExportData[21 + i, j].green)},{Convert.ToString(ExportData[21 + i, j].blue)},");
+                }
+                for (int j = 0; j < numberOfLeds; j++)
+                {
+                    writeData.Write($"{Convert.ToString(ExportData[42 + i, j].brightness)},{Convert.ToString(ExportData[42 + i, j].red)},{Convert.ToString(ExportData[42 + i, j].green)},{Convert.ToString(ExportData[42 + i, j].blue)},");
+                }
+                for (int j = 0; j < numberOfLeds; j++)
+                {
+                    writeData.Write($"{Convert.ToString(ExportData[i, j].brightness)},{Convert.ToString(ExportData[i, j].red)},{Convert.ToString(ExportData[i, j].green)},{Convert.ToString(ExportData[i, j].blue)},");
+                }
+                writeData.WriteLine("");
+            }
+            for (int i = 0; i < numberOfSegments / numberOfLedstrips; i++)
+            {
+                for (int j = 0; j < numberOfLeds; j++)
+                {
+                    writeData.Write($"{Convert.ToString(ExportData[42 + i, j].brightness)},{Convert.ToString(ExportData[42 + i, j].red)},{Convert.ToString(ExportData[42 + i, j].green)},{Convert.ToString(ExportData[42 + i, j].blue)},");
+                }
+                for (int j = 0; j < numberOfLeds; j++)
+                {
+                    writeData.Write($"{Convert.ToString(ExportData[i, j].brightness)},{Convert.ToString(ExportData[i, j].red)},{Convert.ToString(ExportData[i, j].green)},{Convert.ToString(ExportData[i, j].blue)},");
+                }
+                for (int j = 0; j < numberOfLeds; j++)
+                {
+                    writeData.Write($"{Convert.ToString(ExportData[21 + i, j].brightness)},{Convert.ToString(ExportData[21 + i, j].red)},{Convert.ToString(ExportData[21 + i, j].green)},{Convert.ToString(ExportData[21 + i, j].blue)},");
+                }
+                writeData.WriteLine("");
             }
         }
         public static void Reset()

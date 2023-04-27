@@ -197,7 +197,7 @@ namespace circle_display
                     string importData = System.IO.File.ReadAllText(filePath);
                     string[] importArray = importData.Split(",");
 
-                    // Tries to import the text data, if this data is incomplete or corrupted an exception is thrown.
+                    // Probeert de text data in te lezen, een exception wordt gegooid als de data beschadigd of incompleet is.
                     try
                     {
                         for (int i = 0; i < numberOfSegments; i++)

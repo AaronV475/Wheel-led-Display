@@ -30,7 +30,7 @@ namespace circle_display
             _label.Content = ledNumber.ToString();
             _label.Height = _label.Width = 30;
             _label.HorizontalContentAlignment = HorizontalAlignment.Center;
-            _label.Margin = new Thickness(0, ((numberOfLeds - 1) - ledNumber) * 20 - 5, 0, 0);
+            _label.Margin = new Thickness(0, (ledNumber) * 20 - 5, 0, 0);
             return _label;
         }
 
